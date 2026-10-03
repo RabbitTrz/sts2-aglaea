@@ -3,7 +3,7 @@
   "name": "Aglaea",
   "author": "RaconTrz",
   "description": "A custom character mod for Slay the Spire 2.",
-  "version": "0.1.2",
+  "version": "0.1.2-fix",
   "min_game_version": "0.107.1",
   "has_pck": true,
   "has_dll": true,
