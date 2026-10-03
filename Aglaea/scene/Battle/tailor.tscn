@@ -1,0 +1,56 @@
+[gd_scene load_steps=4 format=3 uid="uid://ck2law1udj5ci"]
+
+[ext_resource type="Texture2D" uid="uid://q6ss5fe6dqat" path="res://Aglaea/images/battle/tailor_anim_attack.png" id="1_fdwyb"]
+[ext_resource type="Texture2D" uid="uid://h8aqht52k0ya" path="res://Aglaea/images/battle/tailor_anim_idle.png" id="2_6y7tt"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_mc4gq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_fdwyb")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_6y7tt")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[node name="Tailor" type="Node2D"]
+
+[node name="Visuals" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(23.4999857, -87.5)
+scale = Vector2(0.5957031, 0.65820307)
+sprite_frames = SubResource("SpriteFrames_mc4gq")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="FormVfx" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+
+[node name="Bounds" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_left = -101.0
+offset_top = -258.0
+offset_right = 141.0
+mouse_filter = 2
+
+[node name="CenterPos" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(24, -148)
+
+[node name="IntentPos" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(50, -290)
+

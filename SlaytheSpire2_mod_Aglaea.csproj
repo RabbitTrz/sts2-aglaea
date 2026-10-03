@@ -1,0 +1,36 @@
+<Project Sdk="Godot.NET.Sdk/4.5.1">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net9.0</TargetFramework>
+    <AssemblyName>Aglaea</AssemblyName>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Alchyr.Sts2.ModAnalyzers" Version="0.1.9" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="Aglaea\localization\**\*.json" />
+  </ItemGroup>
+  <!-- tools/ 下是独立的 .NET 项目（安装器），有各自的 csproj。
+       根项目默认的 **/*.cs glob 会把它们的源码和 obj/ 生成文件一起吸进来，
+       导致 Color 二义性、WinForms 类型缺失、程序集特性重复等编译错误。 -->
+  <ItemGroup>
+    <Compile Remove="tools\**" />
+    <None Remove="tools\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\..\..\Program Files (x86)\Steam\steamapps\common\Slay the Spire 2\data_sts2_windows_x86_64\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="BaseLib">
+      <HintPath>..\..\Desktop\BaseLib.3.4.7\BaseLib.dll</HintPath>
+    </Reference>
+    <Reference Include="GodotSharp">
+      <HintPath>..\..\..\..\Program Files (x86)\Steam\steamapps\common\Slay the Spire 2\data_sts2_windows_x86_64\GodotSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="sts2">
+      <HintPath>..\..\..\..\Program Files (x86)\Steam\steamapps\common\Slay the Spire 2\data_sts2_windows_x86_64\sts2.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

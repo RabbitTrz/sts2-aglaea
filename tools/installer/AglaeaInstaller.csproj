@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>AglaeaInstaller</AssemblyName>
+    <RootNamespace>AglaeaInstaller</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+    <Version>0.1.2</Version>
+    <Product>Aglaea Mod Installer</Product>
+    <AssemblyTitle>Aglaea 模组安装器</AssemblyTitle>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <!-- payload 目录由 build_installer.sh 在构建前填充 -->
+    <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="payload\Aglaea.dll" LogicalName="payload.Aglaea.dll" Condition="Exists('payload\Aglaea.dll')" />
+    <EmbeddedResource Include="payload\Aglaea.pck" LogicalName="payload.Aglaea.pck" Condition="Exists('payload\Aglaea.pck')" />
+    <EmbeddedResource Include="payload\Aglaea.json" LogicalName="payload.Aglaea.json" Condition="Exists('payload\Aglaea.json')" />
+    <EmbeddedResource Include="payload\README.txt" LogicalName="payload.README.txt" Condition="Exists('payload\README.txt')" />
+  </ItemGroup>
+
+</Project>

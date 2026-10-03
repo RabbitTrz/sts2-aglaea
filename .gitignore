@@ -1,0 +1,24 @@
+# ---------- Godot ----------
+# 编辑器/导入缓存，1.7 GB 级别，绝不入库
+.godot/
+/android/
+
+# 导出的资源包（构建产物，用 build_installer.sh 现生成）
+*.pck
+
+# ---------- .NET ----------
+bin/
+obj/
+# 安装器发布出来的自包含 exe（104 MB）
+dist/
+# 安装器构建时填充的素材目录
+tools/installer/payload/
+# 发出去的压缩包（每个 ~100 MB）
+*.zip
+*.user
+.vs/
+
+# ---------- 其它 ----------
+*.pdb
+.DS_Store
+Thumbs.db

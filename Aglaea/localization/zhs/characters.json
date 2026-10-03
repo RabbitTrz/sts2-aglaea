@@ -1,0 +1,16 @@
+{
+    "MOENEGIMOD-AGLAEA.title": "阿格莱雅",
+    "MOENEGIMOD-AGLAEA.titleObject": "阿格莱雅",
+    "MOENEGIMOD-AGLAEA.description": "背负浪漫火种的半神，逐火的领袖，奥赫玛的改衣师。\n在与衣匠的共舞中华丽地清扫敌人。",
+    "MOENEGIMOD-AGLAEA.pronounObject": "她",
+    "MOENEGIMOD-AGLAEA.possessiveAdjective": "她的",
+    "MOENEGIMOD-AGLAEA.pronounPossessive": "她的",
+    "MOENEGIMOD-AGLAEA.pronounSubject": "她",
+    "MOENEGIMOD-AGLAEA.cardsModifierTitle": "Aglaea Cards",
+    "MOENEGIMOD-AGLAEA.cardsModifierDescription": "阿格莱雅的卡牌将出现在商店与奖励中",
+    "MOENEGIMOD-AGLAEA.aromaPrinciple": "[sine][pink]阿格莱雅[/pink][/sine]",
+    "MOENEGIMOD-AGLAEA.eventDeathPrevention": "还不能止步于此",
+    "MOENEGIMOD-AGLAEA.banter.alive.endTurnPing": "尼尔多龙马...",
+    "MOENEGIMOD-AGLAEA.banter.dead.endTurnPing": "尼尔多龙马...",
+    "MOENEGIMOD-AGLAEA.goldMonologue": "[sine]金闪闪的哈基米...[/sine]..."
+}

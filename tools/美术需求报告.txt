@@ -1,0 +1,224 @@
+# Aglaea 模组美术需求报告
+
+生成日期：2026-09-12（初次）/ 2026-09-13（角色与衣匠章节细化）/ 2026-09-18（新增卡面规范 2.3）
+优先级口径：能力(buff)图标 > 遗物图标 > 卡面 > 角色 / 衣匠
+
+---
+
+## 一、优先级总览
+
+| 优先级 | 类别 | 现状 / 影响 |
+|---|---|---|
+| ★★★ 最高 | 能力图标（Power，含 big 图） | 已全部整备并部署 |
+| ★★ 高 | 遗物图标（Relic） | 已全部整备并部署 |
+| ★ 低 | 角色 / 衣匠 | 已有亡灵契约师（necrobinder）/ Osty 占位，可暂不改；详见第三章 3.3 |
+
+---
+
+## 二、资源尺寸规范（实测本模组现有资源 + 原版 CharacterModel/PowerModel 源码）
+
+### 2.1 能力图标 Power icon
+| 类型 | 尺寸 | 路径 |
+|---|---|---|
+| 普通图标 | **250 × 250** px | `Aglaea/images/powers/<name>.png` |
+| 大图标（hover 详情） | **500 × 500** px | `Aglaea/images/powers/big/<name>.png` |
+
+- 命名规则（`AglaeaPower.CustomPackedIconPath`）：`Id.Entry.RemovePrefix().ToLowerInvariant()`，即去掉 `MOENEGIMOD-` 前缀后整段小写。
+  - 例：`TailorSwarmPower` → `tailor_swarm_power.png`；`WeaveLinePower` → `weave_line_power.png`。
+
+### 2.2 遗物图标 Relic icon
+| 类型 | 尺寸 | 路径 |
+|---|---|---|
+| 普通图标 | **250 × 250** px | `Aglaea/images/relics/<name>.png` |
+| 描边（outline） | **250 × 250** px | `Aglaea/images/relics/<name>_outline.png` |
+| 大图标 | **500 × 500** px | `Aglaea/images/relics/big/<name>.png` |
+
+- 命名规则同 power：`AglaeaExecutionRecord` → `aglaea_execution_record.png`（+ `_outline.png` + big）。
+
+### 2.3 卡面 Card art（本次新增）
+
+> 权威依据：`AglaeaCard.cs` 内注释（第 17-49 行）+ 实测本模组现有卡图 + `CardModel.cs` 原版 atlas 路径对比。
+
+**代码内写明的尺寸标准（`AglaeaCard.cs` 注释原文）：**
+```
+//Image size:
+//Normal art: 1000x760 (Using 500x380 should also work, it will simply be scaled.)
+//Full art: 606x852
+
+//Smaller variants of card images for efficiency:
+//Smaller variant of fullart: 250x350
+//Smaller variant of normalart: 250x190
+```
+
+| 类型 | 尺寸 | 路径 |
+|---|---|---|
+| 正式卡面大图（普通卡） | **1000 × 760** px（也可 500×380，自动缩放） | `Aglaea/images/cards/big/<name>.png` |
+| 正式卡面大图（全幅卡 full-art） | **606 × 852** px | `Aglaea/images/cards/big/<name>.png` |
+| 卡面小图（普通卡，渲染用） | **250 × 190** px | `Aglaea/images/cards/<name>.png` |
+| 卡面小图（全幅卡，渲染用） | **250 × 350** px | `Aglaea/images/cards/<name>.png` |
+
+- **命名规则**：`Id.Entry.RemovePrefix().ToLowerInvariant()`，即去掉 `MOENEGIMOD-` 前缀后整段小写。
+  - 例：`AglaeaDemigodForm` → `aglaea_demigod_form.png`；`AglaeaDenseRain` → `aglaea_dense_rain.png`。
+- **路径映射（`StringExtension.cs`）**：
+  - `CardImagePath()` → `{ModId}/images/cards/{name}.png`（小图）
+  - `BigCardImagePath()` → `{ModId}/images/cards/big/{name}.png`（大图）
+- **透明通道**：普通卡图为 RGB（无 alpha）；power/relic 图标为 RGBA。
+- **格式**：PNG（Godot `CompressedTexture2D`，`compress/mode=0` 不压缩、`mipmaps/generate=false`）。
+
+**与原版 STS2 的差异（重要）**：原版卡图**不是独立 png**，而是打包成图集
+`atlases/card_atlas.sprites/{卡池}/{id}.tres`（见原版 `CardModel.cs:143`）。
+**BaseLib mod 体系用独立 png**（`CustomPortraitPath` 返回 png 路径），所以本模组直接放 png 即可，无需图集。
+
+**当前实现待注意（潜在缺口）**：`AglaeaCard.cs` 中 `CustomPortraitPath`（大图）与
+`PortraitPath`（小图）逻辑目前**完全相同**，都指向 `images/cards/` 小图目录；
+`BigCardImagePath()` 虽已定义但**尚未被调用**，且 **`images/cards/big/` 目录尚未创建**。
+即：卡牌的正式大图（1000×760 等）尚未落地，当前卡面统一为 250×190 占位小图。
+
+---
+
+## 三、具体缺口清单
+
+### 3.1 能力图标（Power）—— 27 张 + 对应 big 图（最高优先）
+以下均为 250×250 普通图 + 500×500 big 图。★ 为核心机制，建议最优先。
+
+| 文件名（去前缀小写） | 中文名 | 备注 |
+|---|---|---|
+| `weave_line_power` | 间隙织线 | ★ 核心 debuff |
+| `golden_thread_power` | 金丝 | ★ 核心 |
+| `supreme_pose_power` | 至高之姿 | ★ 核心 |
+| `tailor_swarm_power` | 衣匠 | ★ 核心（隐藏 buff，但需兜底） |
+| `divinity_power` | 神性 | ★ 本期新增 |
+| `demigod_form_power` | 半神形态 | 本期新增 |
+| `forged_tear_body_power` | 锻泪匠躯 | 本期新增 |
+| `tailor_limit_power` | 缠丝聚金 | |
+| `tailor_max_hp_bonus_power` | 衣匠额外最大生命（诛线 / 金星行列 / 诛线记录 三源共用） | |
+| `chrysalis_swarm_power` | 若虫 | |
+| `weave_and_fight_power` | 即织即战 | |
+| `edge_thread_power` | 锐丝如刃 | |
+| `wide_net_power` | 广织成网 | |
+| `spin_guard_power` | 回纺为守 | |
+| `bathe_gold_power` | 沐浴黄金 | |
+| `gold_barrier_power` | 金丝成障 | |
+| `gilt_spark_power` | 金石闪烁 | |
+| `gossamer_power` | 脆若游丝 | |
+| `twist_tight_power` | 绞紧 | |
+| `spreading_thread_power` | 传线连绵 | |
+| `free_next_attack_power` | 免织 | |
+| `triple_next_attack_power` | 三织 | |
+| `rest_accumulate_power` | 静息蓄势 | |
+| `absolute_weave_power` | 决织 | |
+| `endless_charge_power` | 蓄势绵延 | |
+| `fate_eyelid_power` | 命运眼睑 | 已注释掉，可暂缓 |
+| `sunbath_power` | 浴光回春 | 已注释掉，可暂缓 |
+
+> `relly_power.png`（测试用）已有图，无需补。
+
+### 3.2 遗物图标（Relic）
+| 文件名 | 中文名 | 需要 |
+|---|---|---|
+| `aglaea_execution_record.png` + `_outline.png` + `big/` | 诛线记录 | ★ 全套缺失（本体 + outline + big） |
+| `aglaea_toy.png` | 小金线玩具 | 已有本体 + outline，缺 big/ 专属图 |
+
+### 3.3 角色 / 衣匠（低优先，有 necrobinder 占位）
+
+#### 3.3.1 权威依据
+
+- `Aglaea.cs` 继承 `PlaceholderCharacterModel`，`PlaceholderID => "necrobinder"`（亡灵契约师）。
+- 未 override 的资产全部按 `PlaceholderID` 拼路径，**从亡灵契约师的资源取**。
+- 可 override 的完整清单来自反编译 `BaseLib.Abstracts.PlaceholderCharacterModel` +
+  `BaseLib.Abstracts.CustomCharacterModel`（接口定义），以及原版
+  `Core/Models/CharacterModel.cs`（默认路径规则）。
+
+#### 3.3.2 角色资产完整清单
+
+> 路径规则（原版）：场景用 `SceneHelper.GetScenePath(inner)` → `res://scenes/<inner>.tscn`；
+> 图片用 `ImageHelper.GetImagePath(inner)` → `res://images/<inner>`。
+> 模组自定义资产放 `res://Aglaea/...`（即 `Aglaea/images/charui/` 等），由 `Aglaea.cs` 显式 override 指向。
+
+| # | 资产 | 类型 | 默认路径（占位 necrobinder） | 现状 |
+|---|---|---|---|---|
+| 1 | 战斗形象 | **Spine .tscn** | `res://scenes/creature_visuals/necrobinder.tscn` | ❌ 占位 |
+| 2 | 卡牌拖尾 | Spine/vfx .tscn | `res://scenes/vfx/card_trail_necrobinder.tscn` | ❌ 占位 |
+| 3 | 顶部头像 | PNG 纹理 | `res://images/ui/top_panel/character_icon_necrobinder.png` | ✅ `character_icon_aglaea.png` |
+| 4 | 顶部头像描边 | PNG 纹理 | `.../character_icon_necrobinder_outline.png` | ❌ 仍占位 |
+| 5 | UI 头像控件 | **场景** `res://scenes/ui/character_icons/<id>_icon.tscn` | `necrobinder_icon.tscn` | ❌ 占位 |
+| 6 | 能量计数器 | **场景** `res://scenes/combat/energy_counters/<id>_energy_counter.tscn` | `necrobinder_energy_counter.tscn` | ❌ 占位 |
+| 7 | 火堆立绘/动画 | **场景** `res://scenes/rest_site/characters/<id>_rest_site.tscn` | `necrobinder_rest_site.tscn` | ❌ 占位 |
+| 8 | 商店立绘/动画 | **场景** `res://scenes/merchant/characters/<id>_merchant.tscn` | `necrobinder_merchant.tscn` | ❌ 占位 |
+| 9 | 选人背景 | **场景**（模组自定义） | `res://scenes/screens/char_select/char_select_bg_necrobinder.tscn` | ✅ `res://Aglaea/scene/Char_Select/char_select_bg_aglaea.tscn` |
+| 10 | 选人立绘 | PNG 纹理 | `res://images/packed/character_select/char_select_necrobinder.png` | ✅ `char_select_aglaea.png` |
+| 11 | 选人立绘（锁定） | PNG 纹理 | `.../char_select_necrobinder_locked.png` | ✅ `char_select_aglaea_locked.png` |
+| 12 | 地图标记 | PNG 纹理 | `res://images/packed/map/icons/map_marker_necrobinder.png` | ✅ `map_marker_aglaea.png` |
+| 13 | 转场材质 | `.tres` | `res://materials/transitions/necrobinder_transition_mat.tres` | ❌ 占位 |
+| 14 | 猜拳手臂·石头 | PNG | `res://images/ui/hands/multiplayer_hand_necrobinder_rock.png` | ❌ 占位（多人） |
+| 15 | 猜拳手臂·剪刀 | PNG | `..._scissors.png` | ❌ 占位（多人） |
+| 16 | 猜拳手臂·布 | PNG | `..._paper.png` | ❌ 占位（多人） |
+| 17 | 猜拳手臂·指向 | PNG | `..._point.png` | ❌ 占位（多人） |
+
+音效（同属角色资产，可选）：`select` / `attack` / `cast` / `die` / 转场 `wipe_<id>`。
+
+**Spine 动画状态**（资产 #1 战斗形象 `.tscn` 需提供，来自原版 `CharacterModel.GenerateAnimator`）：
+`idle_loop`（循环）、`low_health_loop`（循环）、`relaxed_loop`（循环）、`die`、`cast`、`attack`、`hurt`；
+映射：`Idle` / `Relaxed` / `Dead` / `Attack` / `Cast` / `Hit` / `PowerUp`。
+
+#### 3.3.3 衣匠（召唤物）资产清单
+
+`AglaeaTailorMonster` 继承 `CustomMonsterModel`：
+
+| 资产 | 类型 | 现状 |
+|---|---|---|
+| 战斗视觉 | **Spine .tscn** `res://scenes/creature_visuals/<id>.tscn` | ❌ 占位 `creature_visuals/osty` |
+| 音效 attack / cast / die | 可选 | ❌ 占位 |
+
+**Spine 动画状态**（须提供，来自 `TailorCmd.AttackWith` 的 `TriggerAnim(...)`）：
+`idle_loop`（循环）、`attack`、`hurt`、`die`、`dead_loop`（循环）、`revive`、`cast`、`attack_poke`；
+其中 `attack` 为**必需**（衣匠每次攻击都会触发 `Attack` 动画）。
+
+#### 3.3.4 补充说明
+
+- **「已就位」的 4 张 PNG 是模组自定义资源**，不是覆盖原版同路径，而是通过 `Aglaea.cs` 的
+  `Custom*Path` 指向 `res://Aglaea/images/charui/...`。
+- **所有 `.tscn` 场景类资产（#1/#2/#5/#6/#7/#8/#13）目前无一就位**，全部走 necrobinder。
+  这类资产本质是 **Godot 场景 + Spine 骨骼动画**，不是静态图片，制作链路与传统图标不同。
+- **多人猜拳手臂（#14-17）** 仅在多人联机模式出现，可最后做或不做。
+
+**衣匠（召唤物）**：`AglaeaTailorMonster.VisualsPath` 复用 `creature_visuals/osty`，需独立 Spine 视觉（暂可继续用 Osty 占位）。
+
+### 3.4 卡面 Card art（本次新增）
+
+**现状**：`images/cards/` 现有约 120 张 **250×190** 占位小图（`gen_card_placeholders.py` 批量生成），
+仅能显示卡图占位。**正式卡面大图（1000×760 / 606×852）全部缺失**，`images/cards/big/` 目录尚未创建。
+
+- 名义上每张卡需补一张正式大图（big），按 2.3 尺寸规范。
+- 当前 `CustomPortraitPath` 未接 `big/` 目录，若后续要启用大图展示，需同步改 `AglaeaCard.cs` 的路径逻辑
+  （属代码改动，非美术范畴，此处仅标注）。
+
+> 详细尺寸与命名规则见 2.3。
+
+---
+
+## 四、附：powers.json 中 description 与 smartDescription 的区别
+
+代码依据：`PowerModel.cs`（`HoverTips` 属性，约 350-399 行）。
+
+| | description | smartDescription |
+|---|---|---|
+| 性质 | 静态完整说明 | 动态简短摘要 |
+| 变量注入 | 只注入卡牌 DynamicVar，**不自动注入 `{Amount}`** | 自动注入 `{Amount}`、`OwnerName`、`PlayerCount` 等运行时变量 |
+| 何时显示 | 无 smartDescription 或 power 不可变时 | `HasSmartDescription && IsMutable` 时优先显示 |
+| 典型写法 | `"每层使衣匠伤害+1"` | `"衣匠伤害+{Amount}"` |
+
+一句话总结：`description` 是静态全文，`smartDescription` 是可写 `{Amount}` 等运行时变量的动态简短版，存在且 power 可变时优先顶替 description 显示在 hover 上。标记型 power（`PowerStackType.Single`）无动态数字，可只写 `description`。
+
+---
+
+## 五、给美术的下单参考（按优先级）
+
+1. **能力图标（最高）**：✅ 已完成（26 张 + big）。
+2. **遗物图标**：✅ 已完成（诛线记录 + 小金线玩具，含 outline 与 big）。
+3. **卡面**：⬜ 仅 250×190 占位小图，正式大图（1000×760 / 606×852）全部缺失，见 3.4 / 2.3。
+4. **角色 / 衣匠**：暂缓，靠 necrobinder 与 Osty 占位。后续需补的清单见 3.3.2 / 3.3.3：
+   - 角色：7 类场景资产（战斗 Spine、拖尾、能量计数器、火堆、商店、UI 头像控件、转场材质）
+     + 头像描边、4 张多人猜拳手臂。
+   - 衣匠：1 套战斗 Spine（含 `attack` 等动画）+ 音效。
+   - 此类资产多为 **Godot 场景（.tscn）+ Spine 骨骼动画**，制作链路与静态图标不同，需专门排期。

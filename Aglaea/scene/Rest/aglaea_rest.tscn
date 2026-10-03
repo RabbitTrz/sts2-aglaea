@@ -1,0 +1,39 @@
+[gd_scene load_steps=2 format=3 uid="uid://ecu3kht27363"]
+
+[ext_resource type="Texture2D" uid="uid://2txyke5usf54" path="res://Aglaea/images/rest_site/rest_aglaea.png" id="1_img"]
+
+[node name="AglaeaRestSite" type="Node2D"]
+position = Vector2(-2, 42)
+
+[node name="Sprite" type="Sprite2D" parent="."]
+position = Vector2(0, -100.50003)
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("1_img")
+
+[node name="ControlRoot" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="Hitbox" type="Control" parent="ControlRoot"]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_left = -155.0
+offset_top = -351.0
+offset_right = 266.0
+offset_bottom = 332.0
+
+[node name="ThoughtBubbleRight" type="Control" parent="ControlRoot"]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_left = 209.209
+offset_top = -317.103
+offset_right = 209.209
+offset_bottom = -317.103
+
+[node name="ThoughtBubbleLeft" type="Control" parent="ControlRoot"]
+unique_name_in_owner = true
+anchors_preset = 0
+offset_left = -73.6836
+offset_top = -324.997
+offset_right = -73.6836
+offset_bottom = -324.997
