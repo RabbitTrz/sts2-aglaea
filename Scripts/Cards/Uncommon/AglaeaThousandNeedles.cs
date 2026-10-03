@@ -15,7 +15,7 @@ namespace MoeNegiMod.Aglaea.Cards;
 /// </summary>
 public class AglaeaThousandNeedles() : AglaeaCard(0,
     CardType.Attack, CardRarity.Uncommon,
-    TargetType.RandomEnemy)
+    TargetType.AnyEnemy)
 {
     protected override bool HasEnergyCostX => true;
 

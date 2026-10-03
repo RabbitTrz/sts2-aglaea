@@ -14,7 +14,7 @@ namespace MoeNegiMod.Aglaea.Cards;
 
 public class AglaeaWildStitch() : AglaeaCard(1,
     CardType.Attack, CardRarity.Common,
-    TargetType.RandomEnemy)
+    TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(2, ValueProp.Move),
