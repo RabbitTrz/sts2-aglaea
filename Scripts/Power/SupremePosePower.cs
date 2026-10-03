@@ -34,6 +34,14 @@ public sealed class SupremePosePower : AglaeaPower
             return;
         }
 
+        // 只响应【自己】打出的攻击牌。
+        // 钩子会收到全场所有角色的出牌——不判断归属的话，队友打攻击牌会消耗自己的
+        // 至高之姿层数、并替自己抽牌（多人实测到的 bug）。
+        if (cardPlay.Card.Owner?.Creature != Owner)
+        {
+            return;
+        }
+
         var player = Owner.Player;
         if (player == null)
         {

@@ -45,6 +45,14 @@ public sealed class TailorSwarmPower : AglaeaPower
             return;
         }
 
+        // 只响应【自己】打出的攻击牌。
+        // 这个钩子会被战斗里所有角色的能力收到——包括队友的。不判断归属的话，
+        // 队友每打一张攻击牌，自己的衣匠也会跟着攻击一次（多人实测到的 bug）。
+        if (cardPlay.Card.Owner?.Creature != Owner)
+        {
+            return;
+        }
+
         if (Owner.Player == null)
         {
             return;

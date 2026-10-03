@@ -102,3 +102,24 @@ internal static class AglaeaArchaicToothPatch
         return false;
     }
 }
+
+/// <summary>
+/// 把【执行者】登记进「先古转化牌」名单。
+///
+/// 原版 <see cref="ArchaicTooth.TranscendenceCards"/> 只返回内置五角色的转化结果（Break / Suppress / …），
+/// 而 <see cref="DustyTome"/>（尘封魔典）挑牌时的过滤条件是
+/// <c>Rarity == Ancient &amp;&amp; !TranscendenceCards.Contains(c)</c> —— 意图是「别把转化奖励再发一遍」。
+/// 执行者对阿格莱雅正是转化奖励，但它是 mod 加的先古牌、进不了那张内置表，
+/// 于是被魔典当普通先古牌抽走了（多人实测：达弗的魔典发了执行者而不是金血浇铸）。
+///
+/// <c>TranscendenceCards</c> 全库只有 DustyTome 一个消费者，所以在这里补一条即可，
+/// 语义上也最贴切：执行者本来就应该算转化牌。
+/// </summary>
+[HarmonyPatch(typeof(ArchaicTooth), nameof(ArchaicTooth.TranscendenceCards), MethodType.Getter)]
+internal static class AglaeaTranscendenceCardsPatch
+{
+    private static void Postfix(ref List<CardModel> __result)
+    {
+        __result.Add(ModelDb.Card<AglaeaExecutor>());
+    }
+}
