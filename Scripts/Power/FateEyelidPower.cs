@@ -45,7 +45,10 @@ public sealed class FateEyelidPower : AglaeaPower, ISupremePoseConsumeListener
     public override async Task AfterSideTurnEnd(
         PlayerChoiceContext choiceContext, CombatSide side, IEnumerable<Creature> participants)
     {
-        if (side != CombatSide.Player)
+        // 用 participants 而不是 side 判断：多人「额外回合」时 playersEndingTurn
+        // 只包含部分玩家，用 side 会把还没结束回合的队友的「本回合」效果一并清掉。
+        // 与 ArrestPower 的写法保持一致。
+        if (!participants.Contains(Owner))
         {
             return;
         }
