@@ -68,6 +68,12 @@ public class Aglaea : PlaceholderCharacterModel
 	public override string CustomCharacterSelectLockedIconPath => "char_select_aglaea_locked.png".CharacterUiPath();
 	public override string CustomMapMarkerPath => "map_marker_aglaea.png".CharacterUiPath();
 
+	// 顶部头像的「描边层」。游戏把它画在头像【后面】并染成 75% 黑（见 multiplayer_vote_icon.tscn），
+	// 用在三处：多人地图投票的头像、先古对话的头像、图鉴。
+	// 不覆写的话会去取占位角色（亡灵契约师）的描边。
+	public override string CustomIconOutlineTexturePath =>
+		"character_icon_aglaea_outline.png".CharacterUiPath();
+
 	// 火堆 / 商店立绘：静态图场景（不是原版那种 Spine 骨架）。
 	// 场景本身在 Aglaea/scene/Rest|Merchant/ 下，节点结构要求写在场景文件的注释里。
 	public override string CustomRestSiteAnimPath => AglaeaVisuals.RestScenePath;
