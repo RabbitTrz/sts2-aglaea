@@ -67,10 +67,11 @@ public sealed class TailorSwarmPower : AglaeaPower
     }
 
     // 玩家受到未[gold]格挡[/gold]的攻击伤害时，由衣匠代为承受：
-    // - 默认：优先让血量最低的衣匠抵挡，若其无法完全吸收，则下一个衣匠继续抵挡，
-    //   直到所有衣匠耗尽；剩余伤害仍由玩家承受。
-    // - 若玩家有「锻泪匠躯」：改为把伤害均摊给所有存活衣匠（每个衣匠承受份额差值最多 1，
-    //   如 8 点伤害分 3 个衣匠 -> 3+3+2），每个衣匠最多承受自身当前血量，剩余由玩家承受。
+    // 优先让血量最低的衣匠抵挡，若其无法完全吸收，则下一个衣匠继续抵挡，
+    // 直到所有衣匠耗尽；剩余伤害仍由玩家承受。
+    //
+    // （v0.1.3 之前这里还有一条「锻泪匠躯 → 均摊伤害」的分支，随该牌重做为
+    //   「衣匠死亡时 AOE」而移除。）
     public override decimal ModifyHpLostBeforeOsty(
         Creature target, decimal amount, ValueProp props, Creature? dealer, CardModel? cardSource)
     {
@@ -89,11 +90,6 @@ public sealed class TailorSwarmPower : AglaeaPower
         if (tailors.Count == 0)
         {
             return amount;
-        }
-
-        if (Owner.GetPower<ForgedTearBodyPower>() != null)
-        {
-            return DistributeEvenly(tailors, amount, props);
         }
 
         return DrainSequentially(tailors, amount, props);
@@ -117,32 +113,6 @@ public sealed class TailorSwarmPower : AglaeaPower
         }
 
         return remaining;
-    }
-
-    // 均摊：把伤害平均分给所有衣匠（差值最多 1），每个衣匠最多承受自身当前血量。
-    private decimal DistributeEvenly(List<Creature> tailors, decimal amount, ValueProp props)
-    {
-        decimal remaining = amount;
-
-        // 份额分配：base + 前 rem 个衣匠额外 +1，使差值最多为 1。
-        int n = tailors.Count;
-        int baseShare = (int)(amount / n);
-        int rem = (int)(amount % n);
-
-        for (int i = 0; i < n; i++)
-        {
-            decimal share = baseShare + (i < rem ? 1 : 0);
-            if (share <= 0m)
-            {
-                continue;
-            }
-
-            decimal absorbed = Math.Min(share, tailors[i].CurrentHp);
-            tailors[i].LoseHpInternal(absorbed, props);
-            remaining -= absorbed;
-        }
-
-        return Math.Max(0m, remaining);
     }
 
     // 玩家受到伤害后，清理掉因抵挡而阵亡的衣匠（正常播死亡动画并移出战斗），

@@ -10,26 +10,26 @@ using System.Threading.Tasks;
 namespace MoeNegiMod.Aglaea.Cards;
 
 /// <summary>
-/// 金丝成障：回合开始时，若处于至高之姿，则获得 6 点[gold]格挡[/gold]。升级：9 点[gold]格挡[/gold]。
+/// 金丝成障：衣匠受到伤害时，降低 1 点受到的伤害。升级：获得固有。
+/// （v0.1.3 改动：原先的效果是「回合开始时若处于至高之姿则获得 6 点格挡」。）
 /// </summary>
 public class AglaeaGoldBarrier() : AglaeaCard(1,
     CardType.Power, CardRarity.Uncommon,
     TargetType.Self)
 {
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [
-        .. TipPose
+        TipTailor
     ];
-
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new PowerVar<GoldBarrierPower>("Barrier", 6m)];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        // 效果本身不叠层（PowerStackType.Single），层数固定传 1。
         await PowerCmd.Apply<GoldBarrierPower>(
-            choiceContext, cardPlay.Player.Creature, DynamicVars["Barrier"].IntValue, cardPlay.Player.Creature, this);
+            choiceContext, cardPlay.Player.Creature, 1, cardPlay.Player.Creature, this);
     }
 
     protected override void OnUpgrade()
     {
-        DynamicVars["Barrier"].UpgradeValueBy(3m);
+        AddKeyword(CardKeyword.Innate);
     }
 }

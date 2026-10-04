@@ -10,8 +10,11 @@ using System.Threading.Tasks;
 namespace MoeNegiMod.Aglaea.Powers;
 
 /// <summary>
-/// 绞紧（玩家身上的 Buff，本回合限定）：本回合「间隙织线」造成的力量下降效果翻倍。
-/// 由「绞紧」技能牌应用。回合结束时移除。
+/// 绞紧（玩家身上的 Buff，本回合限定）：本回合触发「间隙织线」力量下降所需的攻击次数降为 1。
+/// 由「绞紧」技能牌应用，回合结束时移除。
+///
+/// 本类只是【标记】：实际的阈值改写写在 <see cref="WeaveLinePower.HitsRequired"/> 里
+/// （那里会检查全场是否有人挂着本 power）。v0.1.3 之前它的效果是「力量下降翻倍」，已替换。
 /// </summary>
 public sealed class TwistTightPower : AglaeaPower
 {

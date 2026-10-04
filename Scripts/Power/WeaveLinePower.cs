@@ -68,6 +68,13 @@ public sealed class WeaveLinePower : AglaeaPower
                 return 2;
             }
 
+            // 绞紧（v0.1.3）：本回合触发力量下降所需的攻击次数降为 1。
+            // 由「绞紧」技能牌挂 TwistTightPower 标记，作用对象是整条间隙织线（全场唯一）。
+            if (combat.Players.Any(p => p.Creature.GetPower<TwistTightPower>() != null))
+            {
+                return 1;
+            }
+
             int playerCount = combat.Players.Count;
             int aglaeaCount = combat.Players.Count(p => p.Character.Id.Entry.RemovePrefix() == "AGLAEA");
 
