@@ -21,14 +21,15 @@ public class AglaeaRiotDance() : AglaeaCard(1,
     protected override IEnumerable<DynamicVar> CanonicalVars => [new RepeatVar(3)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [
-        HoverTipFactory.FromPower<TailorSwarmPower>()
+        HoverTipFactory.FromPower<TailorSwarmPower>(),
+        TipExtraAttack
     ];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         for (int i = 0; i < DynamicVars.Repeat.IntValue; i++)
         {
-            await TailorCmd.AttackOnce(choiceContext, cardPlay.Player, 3);
+            await TailorCmd.AttackOnce(choiceContext, cardPlay.Player, 3, extraAttack: true);
         }
     }
 

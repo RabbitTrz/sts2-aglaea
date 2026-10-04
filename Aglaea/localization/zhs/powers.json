@@ -1,4 +1,6 @@
 {
+  "MOENEGIMOD-EXTRA_ATTACK.description": "衣匠的这类攻击不会消耗自身的生命值。",
+  "MOENEGIMOD-EXTRA_ATTACK.title": "额外攻击",
   "MOENEGIMOD-RELLY_POWER.description": "呃啊",
   "MOENEGIMOD-RELLY_POWER.smartDescription": "有{Amount}层傻了吧唧",
   "MOENEGIMOD-RELLY_POWER.title": "傻了吧唧",

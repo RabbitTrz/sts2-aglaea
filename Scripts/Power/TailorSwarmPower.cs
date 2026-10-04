@@ -156,20 +156,12 @@ public sealed class TailorSwarmPower : AglaeaPower
             return;
         }
 
-        var deadTailors = Owner.Pets
-            .Where(c => !c.IsAlive && c.Monster is AglaeaTailorMonster)
-            .ToList();
-        if (deadTailors.Count == 0)
+        if (Owner.Player == null)
         {
             return;
         }
 
-        await CreatureCmd.Kill(deadTailors);
-
-        if (Owner.Player != null)
-        {
-            await TailorCmd.AddChrysalisToDrawPile(
-                choiceContext, Owner.Player, cardSource, deadTailors.Count);
-        }
+        // 统一走 TailorCmd 的清理：衣匠攻击掉血致死（v0.1.3）走的是同一套收尾。
+        await TailorCmd.CleanupDeadTailors(choiceContext, Owner.Player, cardSource);
     }
 }

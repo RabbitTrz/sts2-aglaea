@@ -119,7 +119,7 @@ public sealed class DemigodFormPower : AglaeaPower, ITailorAttackListener
         {
             for (int i = 0; i < extra; i++)
             {
-                await TailorCmd.AttackWith(choiceContext, player, tailor, TailorAttackDamage);
+                await TailorCmd.AttackWith(choiceContext, player, tailor, TailorAttackDamage, extraAttack: true);
             }
         }
         finally

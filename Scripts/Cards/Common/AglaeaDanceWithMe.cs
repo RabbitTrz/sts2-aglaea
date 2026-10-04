@@ -22,7 +22,8 @@ public class AglaeaDanceWithMe() : AglaeaCard(1,
     ];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [
-        HoverTipFactory.FromPower<TailorSwarmPower>()
+        HoverTipFactory.FromPower<TailorSwarmPower>(),
+        TipExtraAttack
     ];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
@@ -30,7 +31,7 @@ public class AglaeaDanceWithMe() : AglaeaCard(1,
         // 若存在衣匠，使所有衣匠各攻击若干次（伤害见 Damage，次数见 Repeat）。
         for (int i = 0; i < DynamicVars.Repeat.IntValue; i++)
         {
-            await TailorCmd.AttackAll(choiceContext, cardPlay.Player, DynamicVars.Damage.IntValue);
+            await TailorCmd.AttackAll(choiceContext, cardPlay.Player, DynamicVars.Damage.IntValue, extraAttack: true);
         }
     }
 

@@ -56,13 +56,21 @@ public static class TailorCmd
         return count;
     }
 
-    /// <summary>召唤一名衣匠。若已达上限则改为往抽牌堆放一张若虫。</summary>
+    /// <summary>
+    /// 召唤一名衣匠。
+    /// 已达上限时（v0.1.3 机制改动）改为【把生命值最低的衣匠回满血】——
+    /// 原先的行为是往抽牌堆放一张若虫，因为衣匠攻击现在会掉血，需要一条补血途径。
+    /// </summary>
     public static async Task<Creature?> Summon(
         PlayerChoiceContext choiceContext, Player player, AbstractModel? source)
     {
         if (TailorCount(player) >= GetMaxTailors(player))
         {
-            await AddChrysalisToDrawPile(choiceContext, player, source, 1, CardPilePosition.Random);
+            var lowest = AliveTailors(player).OrderBy(c => c.CurrentHp).FirstOrDefault();
+            if (lowest != null && lowest.CurrentHp < lowest.MaxHp)
+            {
+                await CreatureCmd.Heal(lowest, lowest.MaxHp - lowest.CurrentHp);
+            }
             return null;
         }
 
@@ -99,7 +107,8 @@ public static class TailorCmd
         {
             for (int i = 0; i < weaveAndFight.Amount; i++)
             {
-                await AttackOnce(choiceContext, player, TailorAttackDamage);
+                // 「即织即战」的自动攻击属于额外攻击，不消耗衣匠生命。
+                await AttackOnce(choiceContext, player, TailorAttackDamage, extraAttack: true);
             }
         }
 
@@ -216,8 +225,12 @@ public static class TailorCmd
         return damage;
     }
 
-    /// <summary>随机一名衣匠攻击一次（伤害经金丝等加成，优先带间隙织线的敌人）。</summary>
-    public static async Task AttackOnce(PlayerChoiceContext choiceContext, Player player, int damage)
+    /// <summary>
+    /// 随机一名衣匠攻击一次（伤害经金丝等加成，优先带间隙织线的敌人）。
+    /// <paramref name="extraAttack"/> = true 表示这是「额外攻击」，不消耗衣匠生命。
+    /// </summary>
+    public static async Task AttackOnce(
+        PlayerChoiceContext choiceContext, Player player, int damage, bool extraAttack = false)
     {
         var tailors = AliveTailors(player);
         if (tailors.Count == 0)
@@ -232,17 +245,62 @@ public static class TailorCmd
             return;
         }
 
-        await AttackWith(choiceContext, player, tailor, damage);
+        await AttackWith(choiceContext, player, tailor, damage, extraAttack);
     }
 
     /// <summary>所有衣匠各攻击一次（伤害经金丝等加成，优先带间隙织线的敌人）。</summary>
-    public static async Task AttackAll(PlayerChoiceContext choiceContext, Player player, int damage)
+    public static async Task AttackAll(
+        PlayerChoiceContext choiceContext, Player player, int damage, bool extraAttack = false)
     {
         var tailors = AliveTailors(player);
         foreach (var tailor in tailors)
         {
-            await AttackWith(choiceContext, player, tailor, damage);
+            await AttackWith(choiceContext, player, tailor, damage, extraAttack);
         }
+    }
+
+    /// <summary>
+    /// 衣匠攻击的代价：攻击后失去 1 点生命（v0.1.3 机制）。
+    /// 「额外攻击」不走这里。
+    ///
+    /// 扣到 0 会真的死：<see cref="Creature.LoseHpInternal"/> 只改血量、不处理死亡，
+    /// 必须再走 <see cref="CreatureCmd.Kill"/> 才会触发 AfterDeath 等钩子
+    /// （密针的减费、锻泪匠躯的死亡 AOE 都靠它），也才会把衣匠移出战斗。
+    /// </summary>
+    private static async Task PayAttackCost(PlayerChoiceContext choiceContext, Player player, Creature tailor)
+    {
+        if (!tailor.IsAlive)
+        {
+            return;
+        }
+
+        tailor.LoseHpInternal(1, ValueProp.Unblockable | ValueProp.Unpowered);
+
+        if (!tailor.IsAlive)
+        {
+            await CleanupDeadTailors(choiceContext, player);
+        }
+    }
+
+    /// <summary>
+    /// 把已经死掉的衣匠真正移除，并按个数往抽牌堆放若虫。
+    ///
+    /// 原先这段只写在 <c>TailorSwarmPower.AfterDamageReceived</c>（衣匠代伤致死那条路），
+    /// v0.1.3 之后衣匠自己攻击也会掉血致死，所以提出来两处公用。
+    /// </summary>
+    public static async Task CleanupDeadTailors(
+        PlayerChoiceContext choiceContext, Player player, AbstractModel? source = null)
+    {
+        var dead = player.PlayerCombatState.Pets
+            .Where(c => !c.IsAlive && c.Monster is AglaeaTailorMonster)
+            .ToList();
+        if (dead.Count == 0)
+        {
+            return;
+        }
+
+        await CreatureCmd.Kill(dead);
+        await AddChrysalisToDrawPile(choiceContext, player, source, dead.Count);
     }
 
     /// <summary>
@@ -250,7 +308,8 @@ public static class TailorCmd
     /// 供「半神形态」等需要在衣匠攻击后驱动同一衣匠连续攻击的能力使用。
     /// </summary>
     public static async Task AttackWith(
-        PlayerChoiceContext choiceContext, Player player, Creature tailor, int damage)
+        PlayerChoiceContext choiceContext, Player player, Creature tailor, int damage,
+        bool extraAttack = false)
     {
         var target = PickTarget(player);
         if (target == null)
@@ -301,6 +360,13 @@ public static class TailorCmd
             {
                 await listener.AfterTailorAttack(choiceContext, player, tailor, t, damageToTarget);
             }
+        }
+
+        // v0.1.3：每次攻击后衣匠失去 1 点生命。「额外攻击」不消耗。
+        // 放在 target 循环之外——「广织成网」一次攻击打所有敌人，也只算一次攻击。
+        if (!extraAttack)
+        {
+            await PayAttackCost(choiceContext, player, tailor);
         }
     }
 }

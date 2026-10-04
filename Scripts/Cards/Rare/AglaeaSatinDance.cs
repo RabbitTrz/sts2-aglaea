@@ -19,7 +19,8 @@ public class AglaeaSatinDance() : AglaeaCard(-1,
     protected override bool HasEnergyCostX => true;
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [
-        HoverTipFactory.FromPower<TailorSwarmPower>()
+        HoverTipFactory.FromPower<TailorSwarmPower>(),
+        TipExtraAttack
     ];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
@@ -32,7 +33,7 @@ public class AglaeaSatinDance() : AglaeaCard(-1,
 
         for (int i = 0; i < x; i++)
         {
-            await TailorCmd.AttackAll(choiceContext, cardPlay.Player, 3);
+            await TailorCmd.AttackAll(choiceContext, cardPlay.Player, 3, extraAttack: true);
         }
     }
 }

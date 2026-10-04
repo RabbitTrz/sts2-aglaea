@@ -5,6 +5,7 @@ using Godot;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.HoverTips;
+using MegaCrit.Sts2.Core.Localization;
 using MegaCrit.Sts2.Core.Logging;
 using MoeNegiMod.Aglaea.Extensions;
 using MoeNegiMod.Aglaea.Character;
@@ -37,6 +38,16 @@ public abstract class AglaeaCard(int cost, CardType type, CardRarity rarity, Tar
         HoverTipFactory.FromPower<SupremePosePower>(),
         HoverTipFactory.FromPower<GoldenThreadPower>()
     ];
+
+    /// <summary>
+    /// 「额外攻击」（v0.1.3 新术语）：这类衣匠攻击不消耗衣匠自己的生命值。
+    ///
+    /// 它不对应任何模型，所以用不了 <c>HoverTipFactory.FromPower</c>，直接从本 mod 的
+    /// powers 表取文案手搓一条。卡面里用 <c>[gold]额外攻击[/gold]</c> 标黄。
+    /// </summary>
+    protected static IHoverTip TipExtraAttack => new HoverTip(
+        new LocString("powers", "MOENEGIMOD-EXTRA_ATTACK.title"),
+        new LocString("powers", "MOENEGIMOD-EXTRA_ATTACK.description"));
 
     //Image size:
     //Normal art: 1000x760 (Using 500x380 should also work, it will simply be scaled.)

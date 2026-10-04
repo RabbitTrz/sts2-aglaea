@@ -31,7 +31,8 @@ public class AglaeaExecutor() : AglaeaCard(0,
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [
         HoverTipFactory.FromPower<WeaveLinePower>(),
-        HoverTipFactory.FromPower<TailorSwarmPower>()
+        HoverTipFactory.FromPower<TailorSwarmPower>(),
+        TipExtraAttack
     ];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
@@ -45,7 +46,7 @@ public class AglaeaExecutor() : AglaeaCard(0,
         for (int i = 0; i < DynamicVars.Repeat.IntValue; i++)
         {
             await TailorCmd.AttackOnce(
-                choiceContext, cardPlay.Player, TailorCmd.TailorAttackDamage);
+                choiceContext, cardPlay.Player, TailorCmd.TailorAttackDamage, extraAttack: true);
         }
     }
 

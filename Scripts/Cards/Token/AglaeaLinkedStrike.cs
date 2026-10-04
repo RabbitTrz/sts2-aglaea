@@ -35,12 +35,13 @@ public class AglaeaLinkedStrike() : AglaeaCard(0,
         new DamageVar(3, ValueProp.Move)
     ];
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [
-        HoverTipFactory.FromPower<TailorSwarmPower>()
+        HoverTipFactory.FromPower<TailorSwarmPower>(),
+        TipExtraAttack
     ];
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CommonActions.CardAttack(this, cardPlay).Execute(choiceContext);
-        await TailorCmd.AttackOnce(choiceContext, cardPlay.Player, 3);
+        await TailorCmd.AttackOnce(choiceContext, cardPlay.Player, 3, extraAttack: true);
     }
 
     protected override void OnUpgrade()

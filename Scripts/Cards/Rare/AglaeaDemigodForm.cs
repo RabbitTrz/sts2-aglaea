@@ -25,7 +25,8 @@ public class AglaeaDemigodForm() : AglaeaCard(3,
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [
         HoverTipFactory.FromPower<DivinityPower>(),
-        TipTailor
+        TipTailor,
+        TipExtraAttack
     ];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)

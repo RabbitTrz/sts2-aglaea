@@ -15,7 +15,8 @@ public class AglaeaWeaveAndFight() : AglaeaCard(1,
     TargetType.Self)
 {
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [
-        TipTailor
+        TipTailor,
+        TipExtraAttack
     ];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)

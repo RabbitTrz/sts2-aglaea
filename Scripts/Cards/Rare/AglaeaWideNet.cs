@@ -20,7 +20,8 @@ public class AglaeaWideNet() : AglaeaCard(2,
     TargetType.Self)
 {
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [
-        TipTailor
+        TipTailor,
+        TipExtraAttack
     ];
 
     protected override IEnumerable<DynamicVar> CanonicalVars => [
@@ -40,7 +41,7 @@ public class AglaeaWideNet() : AglaeaCard(2,
             int attacks = DynamicVars.Repeat.IntValue;
             for (int i = 0; i < attacks; i++)
             {
-                await TailorCmd.AttackOnce(choiceContext, player, TailorCmd.TailorAttackDamage);
+                await TailorCmd.AttackOnce(choiceContext, player, TailorCmd.TailorAttackDamage, extraAttack: true);
             }
         }
     }
