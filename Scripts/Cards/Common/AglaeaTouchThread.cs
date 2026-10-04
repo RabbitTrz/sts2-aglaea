@@ -23,13 +23,14 @@ public class AglaeaTouchThread() : AglaeaCard(1,
     public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [
-        HoverTipFactory.FromPower<TailorSwarmPower>()
+        HoverTipFactory.FromPower<TailorSwarmPower>(),
+        TipExtraAttack
     ];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        // 若存在衣匠，使随机一名衣匠攻击一次。
-        await TailorCmd.AttackOnce(choiceContext, cardPlay.Player, 3);
+        // 若存在衣匠，使随机一名衣匠额外攻击一次（不消耗其生命）。
+        await TailorCmd.AttackOnce(choiceContext, cardPlay.Player, 3, extraAttack: true);
 
         // 从弃牌堆选择一张攻击牌放入手牌。
         var card = (await CardSelectCmd.FromCombatPile(

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace MoeNegiMod.Aglaea.Cards;
 
 /// <summary>
-/// 万丝齐舞：对所有敌人造成 12 点伤害，所有衣匠都会回应此次攻击。升级后 15 点。
+/// 万丝齐舞：对所有敌人造成 12 点伤害，所有衣匠都会额外攻击一次。升级后 15 点。
 /// </summary>
 public class AglaeaAllThreadsDance() : AglaeaCard(2,
     CardType.Attack, CardRarity.Rare,
@@ -22,15 +22,16 @@ public class AglaeaAllThreadsDance() : AglaeaCard(2,
     protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(12, ValueProp.Move)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [
-        HoverTipFactory.FromPower<TailorSwarmPower>()
+        HoverTipFactory.FromPower<TailorSwarmPower>(),
+        TipExtraAttack
     ];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         await CommonActions.CardAttack(this, cardPlay).Execute(choiceContext);
 
-        // 所有衣匠各攻击一次（回应此次攻击）。
-        await TailorCmd.AttackAll(choiceContext, cardPlay.Player, 3);
+        // 所有衣匠各额外攻击一次（不消耗其生命）。
+        await TailorCmd.AttackAll(choiceContext, cardPlay.Player, 3, extraAttack: true);
     }
 
     protected override void OnUpgrade()
