@@ -1,4 +1,10 @@
 {
+  "MOENEGIMOD-AGLAEA_ANTINOMY.description": "获得{Energy:energyIcons()}，受到{Damage:diff()}点伤害。",
+  "MOENEGIMOD-AGLAEA_ANTINOMY.title": "二律背反",
+  "MOENEGIMOD-AGLAEA_ENTANGLE.description": "不能被打出。这张牌在[gold]手牌[/gold]中时，如果再次抽到[gold]纠缠[/gold]，则本回合无法再出牌，同时消耗这两张[gold]纠缠[/gold]。",
+  "MOENEGIMOD-AGLAEA_ENTANGLE.title": "纠缠",
+  "MOENEGIMOD-AGLAEA_WARPLATE.description": "保留。获得{Energy:energyIcons()}。获得{Block:diff()}点[gold]格挡[/gold]。",
+  "MOENEGIMOD-AGLAEA_WARPLATE.title": "战甲",
     "MOENEGIMOD-AGLAEA_ATTACK.description": "造成{Damage:diff()}点伤害",
     "MOENEGIMOD-AGLAEA_ATTACK.title": "打击",
     "MOENEGIMOD-AGLAEA_DEFEND.description": "获得{Block:diff()}点[gold]格挡[/gold]",

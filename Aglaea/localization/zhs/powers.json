@@ -1,4 +1,7 @@
 {
+  "MOENEGIMOD-ENTANGLE_LOCK_POWER.description": "本回合无法再打出[gold]手牌[/gold]。",
+  "MOENEGIMOD-ENTANGLE_LOCK_POWER.smartDescription": "本回合无法再打出[gold]手牌[/gold]。",
+  "MOENEGIMOD-ENTANGLE_LOCK_POWER.title": "纠缠",
   "MOENEGIMOD-EXTRA_ATTACK.description": "衣匠的这类攻击不会消耗自身的生命值。",
   "MOENEGIMOD-EXTRA_ATTACK.title": "额外攻击",
   "MOENEGIMOD-RELLY_POWER.description": "呃啊",
