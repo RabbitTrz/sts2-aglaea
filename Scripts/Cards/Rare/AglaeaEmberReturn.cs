@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
+using MoeNegiMod.Aglaea.Commands;
 using MoeNegiMod.Aglaea.Powers;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,11 +42,8 @@ public class AglaeaEmberReturn() : AglaeaCard(0,
     {
         var creature = cardPlay.Player.Creature;
 
-        int poseLayers = creature.GetPower<SupremePosePower>()?.Amount ?? 0;
-        if (poseLayers > 0)
-        {
-            await PowerCmd.Remove(creature.GetPower<SupremePosePower>()!);
-        }
+        // 走「直接移除」入口：会通知静息蓄势按层数给力量。
+        int poseLayers = await SupremePoseCmd.RemoveAllDirectly(choiceContext, cardPlay.Player, this);
 
         // 力量与敏捷清零。
         await ZeroOut<StrengthPower>(creature);

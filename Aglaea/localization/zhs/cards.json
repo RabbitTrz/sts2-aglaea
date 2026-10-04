@@ -126,7 +126,7 @@
     "MOENEGIMOD-AGLAEA_SNIP_MOMENT.title": "裁断之时",
     "MOENEGIMOD-AGLAEA_GOLD_STAR_ROW.description": "使[gold]衣匠[/gold]的最大生命值加{Bonus:diff()}。",
     "MOENEGIMOD-AGLAEA_GOLD_STAR_ROW.title": "金星行列",
-    "MOENEGIMOD-AGLAEA_REST_ACCUMULATE.description": "若一回合没有受到伤害，则在下回合开始时，获得{Pose:diff()}层[gold]至高之姿[/gold]。",
+    "MOENEGIMOD-AGLAEA_REST_ACCUMULATE.description": "通过卡牌直接移除[gold]至高之姿[/gold]时，每移除1层获得{Pose:diff()}点[gold]力量[/gold]。",
     "MOENEGIMOD-AGLAEA_REST_ACCUMULATE.title": "静息蓄势",
     "MOENEGIMOD-AGLAEA_ENTWINE_GOLD.description": "使[gold]衣匠[/gold]的最大数量加{Limit:diff()}。",
     "MOENEGIMOD-AGLAEA_ENTWINE_GOLD.title": "缠丝聚金",

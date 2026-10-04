@@ -5,6 +5,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
+using MoeNegiMod.Aglaea.Commands;
 using MoeNegiMod.Aglaea.Powers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -29,18 +30,15 @@ public class AglaeaWring() : AglaeaCard(1,
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        var creature = cardPlay.Player.Creature;
-        var pose = creature.GetPower<SupremePosePower>();
-        if (pose == null)
+        // 走「直接移除」入口：会通知静息蓄势按层数给力量。
+        int removed = await SupremePoseCmd.RemoveAllDirectly(choiceContext, cardPlay.Player, this);
+        if (removed <= 0)
         {
             return;
         }
 
-        int removed = pose.Amount;
-        await PowerCmd.Remove<SupremePosePower>(creature);
-
         int block = removed * DynamicVars.Block.IntValue;
-        await CreatureCmd.GainBlock(creature, block, ValueProp.Move, cardPlay);
+        await CreatureCmd.GainBlock(cardPlay.Player.Creature, block, ValueProp.Move, cardPlay);
     }
 
     protected override void OnUpgrade()

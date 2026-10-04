@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.ValueProps;
+using MoeNegiMod.Aglaea.Commands;
 using MoeNegiMod.Aglaea.Powers;
 using System;
 using System.Collections.Generic;
@@ -58,7 +59,8 @@ public class AglaeaEpicFinale() : AglaeaCard(2,
         int removed = 0;
 
         removed += await RemoveAll<GoldenThreadPower>(creature);
-        removed += await RemoveAll<SupremePosePower>(creature);
+        // 至高之姿走「直接移除」入口：会通知静息蓄势按层数给力量。
+        removed += await SupremePoseCmd.RemoveAllDirectly(choiceContext, cardPlay.Player, this);
 
         // 力量/敏捷只移除正数部分。
         removed += await RemoveAll<StrengthPower>(creature);

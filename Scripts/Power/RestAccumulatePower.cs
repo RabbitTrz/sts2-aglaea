@@ -1,72 +1,50 @@
-using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
-using MegaCrit.Sts2.Core.Entities.Creatures;
-using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Powers;
-using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.ValueProps;
+using MegaCrit.Sts2.Core.Models.Powers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MoeNegiMod.Aglaea.Powers;
 
 /// <summary>
-/// 静息蓄势：若一回合没有受到伤害，则在下回合开始时，获得 1 层至高之姿。
-/// Amount 记录每回合开始时获得的至高之姿层数（升级后为 2）。
+/// 静息蓄势（v0.1.3 重做）：通过卡牌【直接移除】至高之姿时，每移除 1 层获得 1 点力量。
+/// Amount = 每层换算的力量点数（升级后为 2）。
+///
+/// 原先的效果是「一回合没受伤，下回合开始获得至高之姿」，已整体替换。
+///
+/// 「直接移除」专指卡牌主动清层（绞丝 / 火种归还 / 史诗终结），
+/// 不包含至高之姿自己每打一张攻击牌消耗 1 层的「消耗」。
+/// 回调入口见 <see cref="Commands.SupremePoseCmd.RemoveAllDirectly"/>。
 /// </summary>
 public sealed class RestAccumulatePower : AglaeaPower
 {
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [
         HoverTipFactory.FromPower<SupremePosePower>(),
-        HoverTipFactory.FromPower<GoldenThreadPower>()
+        HoverTipFactory.FromPower<GoldenThreadPower>(),
+        HoverTipFactory.FromPower<StrengthPower>()
     ];
 
     public override PowerType Type => PowerType.Buff;
 
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    private sealed class Data
+    /// <summary>
+    /// 由 <see cref="Commands.SupremePoseCmd.RemoveAllDirectly"/> 调用：
+    /// 卡牌直接移除了 <paramref name="removed"/> 层至高之姿，按此给力量。
+    /// </summary>
+    public async Task OnSupremePoseRemovedDirectly(
+        PlayerChoiceContext choiceContext, int removed, AbstractModel? source)
     {
-        public bool TookDamageThisTurn;
-    }
-
-    protected override object InitInternalData()
-    {
-        return new Data();
-    }
-
-    // 玩家实际掉血（未被[gold]格挡[/gold]）时标记本回合已受伤。
-    public override Task AfterDamageReceived(
-        PlayerChoiceContext choiceContext, Creature target, DamageResult result,
-        ValueProp props, Creature? dealer, CardModel? cardSource)
-    {
-        if (target == Owner && result.UnblockedDamage > 0)
-        {
-            GetInternalData<Data>().TookDamageThisTurn = true;
-        }
-        return Task.CompletedTask;
-    }
-
-    // 玩家回合开始时：若上一回合（敌方回合）未受伤，则获得至高之姿。
-    public override async Task AfterSideTurnStart(
-        CombatSide side, IReadOnlyList<Creature> participants, ICombatState combatState)
-    {
-        if (!participants.Contains(Owner))
+        if (Amount <= 0 || removed <= 0)
         {
             return;
         }
 
-        var data = GetInternalData<Data>();
-        if (!data.TookDamageThisTurn)
-        {
-            await PowerCmd.Apply<SupremePosePower>(
-                new ThrowingPlayerChoiceContext(), Owner, Amount, Owner, null);
-        }
-
-        // 重置受伤标记，等待本回合（直到下个敌方回合）再次检测。
-        data.TookDamageThisTurn = false;
+        await PowerCmd.Apply<StrengthPower>(
+            choiceContext, Owner, Amount * removed, Owner, source as CardModel);
     }
 }
