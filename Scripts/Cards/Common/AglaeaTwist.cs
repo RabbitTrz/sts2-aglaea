@@ -16,9 +16,7 @@ public class AglaeaTwist() : AglaeaCard(1,
     CardType.Skill, CardRarity.Common,
     TargetType.Self)
 {
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new GoldVar(3)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new GoldVar(5)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [
         HoverTipFactory.FromPower<SupremePosePower>(),

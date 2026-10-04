@@ -30,7 +30,7 @@ public class AglaeaEpicFinale() : AglaeaCard(2,
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new CalculationBaseVar(1m),
-        new ExtraDamageVar(3m),
+        new ExtraDamageVar(6m),
         // CalculatedDamage 只是一个「显示用」的伤害值：它的数值由
         // CalculationBase(=1) + ExtraDamage(=3) × 乘数 得来，但真正结算的伤害仍是
         // OnPlay 里用实际移除的层数现算的。乘数必须与 OnPlay 的计数口径【完全一致】，

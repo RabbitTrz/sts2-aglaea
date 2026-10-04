@@ -14,7 +14,7 @@ namespace MoeNegiMod.Aglaea.Cards;
 /// <summary>
 /// 枕茧：造成 15 点伤害，将 2 张若虫放入抽牌堆。升级后 20 点伤害。
 /// </summary>
-public class AglaeaPillowCocoon() : AglaeaCard(3,
+public class AglaeaPillowCocoon() : AglaeaCard(2,
     CardType.Attack, CardRarity.Uncommon,
     TargetType.AnyEnemy)
 {

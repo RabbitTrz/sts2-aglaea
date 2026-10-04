@@ -18,7 +18,7 @@ public class AglaeaRiotDance() : AglaeaCard(1,
     CardType.Skill, CardRarity.Uncommon,
     TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new RepeatVar(3)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [new RepeatVar(2)];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [
         HoverTipFactory.FromPower<TailorSwarmPower>(),

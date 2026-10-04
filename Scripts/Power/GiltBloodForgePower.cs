@@ -28,7 +28,7 @@ public sealed class GiltBloodForgePower : AglaeaPower
     ];
 
     /// <summary>每层能力对应的至高之姿层数。</summary>
-    private const decimal _supremePosePerStack = 2m;
+    private const decimal _supremePosePerStack = 3m;
 
     public override PowerType Type => PowerType.Buff;
 

@@ -16,7 +16,7 @@ namespace MoeNegiMod.Aglaea.Cards;
 /// 循环写成循环调用，可正确累层。
 /// 由「尘封魔典」发放（该遗物从角色卡池随机挑 Ancient 牌，本牌自动进入候选）。
 /// </summary>
-public class AglaeaGiltBloodForge() : AglaeaCard(3,
+public class AglaeaGiltBloodForge() : AglaeaCard(2,
     CardType.Power, CardRarity.Ancient,
     TargetType.Self)
 {

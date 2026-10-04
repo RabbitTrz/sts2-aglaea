@@ -21,7 +21,7 @@ public class AglaeaDestinedDance() : AglaeaCard(1,
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [
         new DamageVar(10, ValueProp.Move),
-        new PowerVar<SupremePosePower>("BonusPerPose", 5m)
+        new PowerVar<SupremePosePower>("BonusPerPose", 7m)
     ];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [

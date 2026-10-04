@@ -188,6 +188,6 @@
     "MOENEGIMOD-AGLAEA_LEADERSHIP_CHARM.title": "领袖魅力",
     "MOENEGIMOD-AGLAEA_ARREST.description": "本回合其他玩家的攻击可以触发[gold]间隙织线[/gold]的力量下降效果。",
     "MOENEGIMOD-AGLAEA_ARREST.title": "逮捕",
-    "MOENEGIMOD-AGLAEA_ROMANTIC_ENSEMBLE.description": "造成{Damage:diff()}点伤害。每当其他玩家打出非本牌的攻击牌时，无论这张牌处于何处都会回到你的手牌。",
+    "MOENEGIMOD-AGLAEA_ROMANTIC_ENSEMBLE.description": "造成{Damage:diff()}点伤害。打出一次后，每当其他玩家打出除本张以外的攻击牌时，无论这张牌处于何处都会回到你的手牌。",
     "MOENEGIMOD-AGLAEA_ROMANTIC_ENSEMBLE.title": "浪漫合奏"
 }

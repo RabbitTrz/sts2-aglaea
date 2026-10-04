@@ -18,7 +18,7 @@ public class AglaeaReSew() : AglaeaCard(0,
     TargetType.AnyEnemy)
 {
     protected override IEnumerable<DynamicVar> CanonicalVars => [
-        new DamageVar(8, ValueProp.Move),
+        new DamageVar(4, ValueProp.Move),
         new DynamicVar("Increase", 4m)
     ];
 
