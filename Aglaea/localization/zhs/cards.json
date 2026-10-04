@@ -86,7 +86,7 @@
     "MOENEGIMOD-AGLAEA_DISPERSE.title": "散力",
     "MOENEGIMOD-AGLAEA_BREAK_THREAD.description": "造成{Damage:diff()}点伤害，使所有[gold]衣匠[/gold]自毁。",
     "MOENEGIMOD-AGLAEA_BREAK_THREAD.title": "破线",
-    "MOENEGIMOD-AGLAEA_ALL_THREADS_DANCE.description": "对所有敌人造成{Damage:diff()}点伤害，所有[gold]衣匠[/gold]都会[gold]额外攻击[/gold]一次。",
+    "MOENEGIMOD-AGLAEA_ALL_THREADS_DANCE.description": "对所有敌人造成{Damage:diff()}点伤害，所有[gold]衣匠[/gold]都会回应此次攻击。",
     "MOENEGIMOD-AGLAEA_ALL_THREADS_DANCE.title": "万丝齐舞",
     "MOENEGIMOD-AGLAEA_GOLD_THREAD_DESCEND.description": "若处于[gold]至高之姿[/gold]，获得{Pose:diff()}层[gold]至高之姿[/gold]。造成{Damage:diff()}点伤害。",
     "MOENEGIMOD-AGLAEA_GOLD_THREAD_DESCEND.title": "金线降神",
