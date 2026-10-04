@@ -29,6 +29,15 @@ public class AglaeaArray() : AglaeaCard(1,
         {
             await TailorCmd.Summon(choiceContext, cardPlay.Player, this);
         }
+
+        // v0.1.3：再回满所有衣匠的生命值。
+        foreach (var tailor in TailorCmd.AliveTailors(cardPlay.Player))
+        {
+            if (tailor.CurrentHp < tailor.MaxHp)
+            {
+                await CreatureCmd.Heal(tailor, tailor.MaxHp - tailor.CurrentHp);
+            }
+        }
     }
 
     protected override void OnUpgrade()

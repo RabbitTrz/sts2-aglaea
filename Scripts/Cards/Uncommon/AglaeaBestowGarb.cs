@@ -1,23 +1,27 @@
+using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.ValueProps;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MoeNegiMod.Aglaea.Cards;
 
 /// <summary>
-/// 予你盛装：将 3 张连携打击放入手牌。消耗。升级：改为放入 3 张连携打击+。
+/// 予你盛装：造成 3 点伤害，将 2 张连携打击放入手牌。升级：改为放入 2 张连携打击+。
+/// （v0.1.3 改动：技能牌 → 攻击牌；加 3 点伤害；张数 3 → 2；去掉「消耗」。）
 /// </summary>
 public class AglaeaBestowGarb() : AglaeaCard(1,
-    CardType.Skill, CardRarity.Uncommon,
-    TargetType.Self)
+    CardType.Attack, CardRarity.Uncommon,
+    TargetType.AnyEnemy)
 {
-    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
-
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new CardsVar(3)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [
+        new DamageVar(3, ValueProp.Move),
+        new CardsVar(2)
+    ];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [
         HoverTipFactory.FromCard<AglaeaLinkedStrike>()
@@ -25,6 +29,8 @@ public class AglaeaBestowGarb() : AglaeaCard(1,
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        await CommonActions.CardAttack(this, cardPlay).Execute(choiceContext);
+
         if (!IsUpgraded)
         {
             await CardPileCmd.AddToCombatAndPreview<AglaeaLinkedStrike>(

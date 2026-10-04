@@ -6,6 +6,7 @@ using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
 using MegaCrit.Sts2.Core.ValueProps;
+using MoeNegiMod.Aglaea.Commands;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,28 +14,25 @@ using System.Threading.Tasks;
 namespace MoeNegiMod.Aglaea.Cards;
 
 /// <summary>
-/// 蚀茧：消耗抽牌堆中的所有若虫。每消耗一张造成 10 点伤害。升级后每张 15 点。
+/// 蚀茧：消耗抽牌堆中的所有若虫。每消耗 1 张召唤 1 次衣匠。消耗。升级后去除消耗。
+/// （v0.1.3 改动：攻击牌 → 技能牌；效果由「每张造成伤害」改为「每张召唤衣匠」。）
 /// </summary>
 public class AglaeaCorrodeCocoon() : AglaeaCard(1,
-    CardType.Attack, CardRarity.Uncommon,
-    TargetType.AnyEnemy)
+    CardType.Skill, CardRarity.Uncommon,
+    TargetType.Self)
 {
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(10, ValueProp.Move)];
+    public override IEnumerable<CardKeyword> CanonicalKeywords => [CardKeyword.Exhaust];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [
-        HoverTipFactory.FromCard<AglaeaChrysalis>()
+        HoverTipFactory.FromCard<AglaeaChrysalis>(),
+        TipTailor
     ];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         var player = cardPlay.Player;
-        var target = cardPlay.Target;
-        if (target == null)
-        {
-            return;
-        }
 
-        // 消耗抽牌堆中的所有若虫。
+        // 消耗抽牌堆中的所有若虫；每消耗一张召唤一次衣匠。
         var chrysalises = CardPile.GetCards(player, PileType.Draw)
             .Where(c => c is AglaeaChrysalis)
             .ToList();
@@ -42,19 +40,12 @@ public class AglaeaCorrodeCocoon() : AglaeaCard(1,
         foreach (var chrysalis in chrysalises)
         {
             await CardCmd.Exhaust(choiceContext, chrysalis);
-        }
-
-        // 每消耗一张造成一次伤害。
-        int damage = DynamicVars.Damage.IntValue;
-        for (int i = 0; i < chrysalises.Count; i++)
-        {
-            await CreatureCmd.Damage(
-                choiceContext, target, damage, ValueProp.Move, player.Creature);
+            await TailorCmd.Summon(choiceContext, player, this);
         }
     }
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(5m);
+        RemoveKeyword(CardKeyword.Exhaust);
     }
 }

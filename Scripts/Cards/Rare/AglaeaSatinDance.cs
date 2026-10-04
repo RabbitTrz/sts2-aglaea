@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 namespace MoeNegiMod.Aglaea.Cards;
 
 /// <summary>
-/// 缎舞（X 费）：若存在衣匠，使所有衣匠攻击 X 次。升级：X+1 次。
+/// 缎舞（X 费）：若存在衣匠，使所有衣匠额外攻击 X+1 次。升级：X+2 次。
+/// （v0.1.3 改动：基础次数由 X 改为 X+1，升级由 X+1 改为 X+2。）
 /// </summary>
 public class AglaeaSatinDance() : AglaeaCard(-1,
     CardType.Skill, CardRarity.Rare,
@@ -25,7 +26,7 @@ public class AglaeaSatinDance() : AglaeaCard(-1,
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
-        int x = ResolveEnergyXValue();
+        int x = ResolveEnergyXValue() + 1;
         if (IsUpgraded)
         {
             x++;
