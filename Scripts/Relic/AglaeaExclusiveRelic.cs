@@ -1,62 +1,26 @@
-using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
 using MegaCrit.Sts2.Core.Entities.Relics;
-using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace MoeNegiMod.Aglaea.Relics;
 
 /// <summary>
 /// 阿格莱雅专属遗物的公共基类（反重力皮靴 / 火力风暴潮 / 光速螺旋桨）。
 ///
-/// 共同行为：
-/// - 不进入遗物池（<see cref="Rarity"/> = None + <see cref="IsAllowedInShops"/> = false），
-///   只能由「火种」累计满 12 层时发放。
-/// - 每打出 <see cref="AttacksPerTrigger"/> 张攻击牌，触发一次 <see cref="OnAttackThresholdReached"/>。
+/// 共同点只有「不进遗物池」：<see cref="Rarity"/> = None + <see cref="IsAllowedInShops"/> = false，
+/// 只能由「火种」累计满 12 层时发放。
 ///
-/// 计数器随遗物实例存活；本类不持久化计数（跨战斗清零属于设计预期——每场战斗重新计数），
-/// 如需跨战斗保留，子类可自行加 [SavedProperty]。
+/// v0.1.3 之前三个遗物共用「每打出 5 张攻击牌触发一次」的机制，现已各自重做，
+/// 因此基类不再提供计数器，各子类自己实现所需的钩子。
 /// </summary>
 public abstract class AglaeaExclusiveRelic : AglaeaRelics
 {
-    /// <summary>触发一次效果所需的攻击牌张数。</summary>
-    protected virtual int AttacksPerTrigger => 5;
-
-    private int _attackCount;
-
     public override RelicRarity Rarity => RelicRarity.None;
 
     // 不走商店/掉落池。
     public override bool IsAllowedInShops => false;
-
-    public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
-    {
-        if (cardPlay.Card.Type != CardType.Attack)
-        {
-            return;
-        }
-
-        // 只统计本次行动玩家自己的攻击牌（多人对局中避免统计他人）。
-        if (cardPlay.Player != Owner)
-        {
-            return;
-        }
-
-        _attackCount++;
-        if (_attackCount < AttacksPerTrigger)
-        {
-            return;
-        }
-
-        _attackCount = 0;
-        await OnAttackThresholdReached(choiceContext);
-    }
-
-    /// <summary>每累计 <see cref="AttacksPerTrigger"/> 张攻击牌触发一次的效果。</summary>
-    protected abstract Task OnAttackThresholdReached(PlayerChoiceContext choiceContext);
 }
 
 /// <summary>
