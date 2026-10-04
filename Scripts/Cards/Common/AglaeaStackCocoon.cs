@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace MoeNegiMod.Aglaea.Cards;
 
 /// <summary>
-/// 叠茧：获得 5 点[gold]格挡[/gold]。将抽牌堆中的所有若虫置于抽牌堆顶。升级后 8 点[gold]格挡[/gold]。
+/// 叠茧：获得 5 点[gold]格挡[/gold]，并打出 1 张抽牌堆中的若虫。升级后 8 点[gold]格挡[/gold]。
 /// </summary>
 public class AglaeaStackCocoon() : AglaeaCard(1,
     CardType.Skill, CardRarity.Common,
@@ -28,20 +28,13 @@ public class AglaeaStackCocoon() : AglaeaCard(1,
     {
         await CommonActions.CardBlock(this, cardPlay);
 
-        // 将抽牌堆中的所有若虫置于堆顶。
-        var drawPile = PileType.Draw.GetPile(cardPlay.Player);
-        var chrysalises = drawPile.Cards
-            .Where(c => c is AglaeaChrysalis)
-            .ToList();
-
-        foreach (var chrysalis in chrysalises)
+        // 打出 1 张抽牌堆中的若虫。走 AutoPlay，若虫自己的结算（加能量、抽牌）照常。
+        var chrysalis = PileType.Draw.GetPile(cardPlay.Player).Cards
+            .OfType<AglaeaChrysalis>()
+            .FirstOrDefault();
+        if (chrysalis != null)
         {
-            drawPile.MoveToTopInternal(chrysalis);
-        }
-
-        if (chrysalises.Count > 0)
-        {
-            drawPile.InvokeContentsChanged();
+            await CardCmd.AutoPlay(choiceContext, chrysalis, null);
         }
     }
 
