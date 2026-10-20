@@ -3,6 +3,7 @@ using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MoeNegiMod.Aglaea.Character;
 using MoeNegiMod.Aglaea.Powers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -24,6 +25,9 @@ public class AglaeaPearlGift() : AglaeaCard(3,
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
+        // 至高之姿的登场演出：仅在层数为 0 且本场战斗还没播过时触发（不阻塞结算）。
+        AglaeaVfx.PlaySupremeIntroOnce(cardPlay.Player.Creature);
+
         await PowerCmd.Apply<SupremePosePower>(
             choiceContext, cardPlay.Player.Creature, DynamicVars["Pose"].IntValue, cardPlay.Player.Creature, this);
     }

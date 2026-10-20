@@ -14,7 +14,7 @@ namespace MoeNegiMod.Aglaea.Powers;
 /// 由「绞紧」技能牌应用，回合结束时移除。
 ///
 /// 本类只是【标记】：实际的阈值改写写在 <see cref="WeaveLinePower.HitsRequired"/> 里
-/// （那里会检查全场是否有人挂着本 power）。v0.1.3 之前它的效果是「力量下降翻倍」，已替换。
+/// （那里会检查全场是否有人挂着本 power）。旧版「力量下降翻倍」是遗留实现，已移除。
 /// </summary>
 public sealed class TwistTightPower : AglaeaPower
 {

@@ -1,0 +1,300 @@
+[gd_scene load_steps=72 format=3 uid="uid://brc4fkkpokven"]
+
+[ext_resource type="Texture2D" uid="uid://76otnypup50l" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_1.png" id="1_y2wa0"]
+[ext_resource type="Texture2D" uid="uid://yqi6y1f66iij" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_2.png" id="2_w68pp"]
+[ext_resource type="Texture2D" uid="uid://b6hb6qnvf0c7d" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_3.png" id="3_qjhgd"]
+[ext_resource type="Texture2D" uid="uid://hhyialod1cnu" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_4.png" id="4_1ukbx"]
+[ext_resource type="Texture2D" uid="uid://bqyjscaf3ykpt" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_5.png" id="5_yw0dl"]
+[ext_resource type="Texture2D" uid="uid://blyxslvaq28xt" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_6.png" id="6_83nxo"]
+[ext_resource type="Texture2D" uid="uid://y7tt1u0q000c" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_7.png" id="7_kc53t"]
+[ext_resource type="Texture2D" uid="uid://b2eog6wi64o8t" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_8.png" id="8_85m6i"]
+[ext_resource type="Texture2D" uid="uid://cqgsfqwviffea" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_9.png" id="9_a38tc"]
+[ext_resource type="Texture2D" uid="uid://vw4wg3yfk1jh" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_10.png" id="10_wc76r"]
+[ext_resource type="Texture2D" uid="uid://bktjaa2do6cpq" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_11.png" id="11_ke4cp"]
+[ext_resource type="Texture2D" uid="uid://cwsqcqscpoje3" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_12.png" id="12_ydqdu"]
+[ext_resource type="Texture2D" uid="uid://bx2sjf7myudu4" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_13.png" id="13_rc6ea"]
+[ext_resource type="Texture2D" uid="uid://bygcgdsgelrq6" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_14.png" id="14_tbylu"]
+[ext_resource type="Texture2D" uid="uid://bsceesl2v4yin" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_15.png" id="15_db4c4"]
+[ext_resource type="Texture2D" uid="uid://bb44rm5hltspa" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_16.png" id="16_xsvh6"]
+[ext_resource type="Texture2D" uid="uid://tgj4bqb7aunf" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_17.png" id="17_gni7p"]
+[ext_resource type="Texture2D" uid="uid://bp1ii85mx0d5e" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_18.png" id="18_sifty"]
+[ext_resource type="Texture2D" uid="uid://cofno7uv1237n" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_19.png" id="19_ur0dg"]
+[ext_resource type="Texture2D" uid="uid://h7dfopk7118b" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_20.png" id="20_lxu7e"]
+[ext_resource type="Texture2D" uid="uid://bfj6rmxcwlgff" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_21.png" id="21_htu1j"]
+[ext_resource type="Texture2D" uid="uid://dllaln042f3in" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_22.png" id="22_ctb58"]
+[ext_resource type="Texture2D" uid="uid://3jf2y2770a2d" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_23.png" id="23_5xvhy"]
+[ext_resource type="Texture2D" uid="uid://4kj2x5yaet3k" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_24.png" id="24_v8vt3"]
+[ext_resource type="Texture2D" uid="uid://bvnljx6iawjv6" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_25.png" id="25_3c4w1"]
+[ext_resource type="Texture2D" uid="uid://djaqeuu322ve" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_26.png" id="26_g24xu"]
+[ext_resource type="Texture2D" uid="uid://0qyaa8dx7chh" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_27.png" id="27_s1pkl"]
+[ext_resource type="Texture2D" uid="uid://vmgedragc5ag" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_28.png" id="28_mwmex"]
+[ext_resource type="Texture2D" uid="uid://coiuhn0pieigh" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_29.png" id="29_h7m0i"]
+[ext_resource type="Texture2D" uid="uid://l4nwbpedoj8v" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_30.png" id="30_rscdy"]
+[ext_resource type="Texture2D" uid="uid://bj5oarbaoflq0" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_31.png" id="31_8pcni"]
+[ext_resource type="Texture2D" uid="uid://pkl7u4f7rly8" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_32.png" id="32_el2ef"]
+[ext_resource type="Texture2D" uid="uid://bt6480xntl57g" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_33.png" id="33_cejsh"]
+[ext_resource type="Texture2D" uid="uid://fe7sqan12uxy" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_34.png" id="34_8754h"]
+[ext_resource type="Texture2D" uid="uid://d1q60tvu6q8u2" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_35.png" id="35_2mvjs"]
+[ext_resource type="Texture2D" uid="uid://prw4jclhqajd" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_36.png" id="36_7nvk1"]
+[ext_resource type="Texture2D" uid="uid://d0rj2rtih5d5i" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_37.png" id="37_dhhnc"]
+[ext_resource type="Texture2D" uid="uid://bwlqq2nd5ckgr" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_38.png" id="38_821eo"]
+[ext_resource type="Texture2D" uid="uid://bav6uqheu3hp7" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_39.png" id="39_o8d7a"]
+[ext_resource type="Texture2D" uid="uid://ccu1r3gw3ra6x" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_40.png" id="40_rok0v"]
+[ext_resource type="Texture2D" uid="uid://ddg0ih2v6j5d6" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_41.png" id="41_c6jn2"]
+[ext_resource type="Texture2D" uid="uid://cwlu3brfyflsx" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_42.png" id="42_lt8um"]
+[ext_resource type="Texture2D" uid="uid://goknl7fvevc7" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_43.png" id="43_a151e"]
+[ext_resource type="Texture2D" uid="uid://e5ep2a1gnqjd" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_44.png" id="44_xmaxt"]
+[ext_resource type="Texture2D" uid="uid://dt20q2oh881oq" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_45.png" id="45_s12wq"]
+[ext_resource type="Texture2D" uid="uid://cpw5k8f1ejqjr" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_46.png" id="46_81x1h"]
+[ext_resource type="Texture2D" uid="uid://c16mvmg40eo8k" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_47.png" id="47_tcksf"]
+[ext_resource type="Texture2D" uid="uid://cgcl3gxauvfbk" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_48.png" id="48_mahbj"]
+[ext_resource type="Texture2D" uid="uid://c5algvww50p66" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_49.png" id="49_ay2ss"]
+[ext_resource type="Texture2D" uid="uid://bffr20buhs58t" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_50.png" id="50_smeka"]
+[ext_resource type="Texture2D" uid="uid://cv83e3i2jkogb" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_51.png" id="51_ulse8"]
+[ext_resource type="Texture2D" uid="uid://bjmbpthvwpr4o" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_52.png" id="52_pkhsg"]
+[ext_resource type="Texture2D" uid="uid://cxac7fymeunsn" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_53.png" id="53_pnfcd"]
+[ext_resource type="Texture2D" uid="uid://c1e7d0ohep8f1" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_54.png" id="54_aut5c"]
+[ext_resource type="Texture2D" uid="uid://2xj103117058" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_55.png" id="55_65m8o"]
+[ext_resource type="Texture2D" uid="uid://cyya4se3fxeo6" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_56.png" id="56_gvkr5"]
+[ext_resource type="Texture2D" uid="uid://rlxvisciv2sw" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_57.png" id="57_ky4ud"]
+[ext_resource type="Texture2D" uid="uid://dxuj5osr7yapx" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_58.png" id="58_o6j5s"]
+[ext_resource type="Texture2D" uid="uid://dr1oybwhgyiia" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_59.png" id="59_np6f8"]
+[ext_resource type="Texture2D" uid="uid://dh4g8h2qpwvfh" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_60.png" id="60_gbpdf"]
+[ext_resource type="Texture2D" uid="uid://bloyleherhtbq" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_61.png" id="61_044kj"]
+[ext_resource type="Texture2D" uid="uid://e83wvp1qkksm" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_62.png" id="62_m2ygd"]
+[ext_resource type="Texture2D" uid="uid://cb7ri0pjs84ro" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_63.png" id="63_77i52"]
+[ext_resource type="Texture2D" uid="uid://dl4wuom1n0fh6" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_64.png" id="64_s6uda"]
+[ext_resource type="Texture2D" uid="uid://bthq4b0nihkw0" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_65.png" id="65_suwtb"]
+[ext_resource type="Texture2D" uid="uid://c2lp0eiqsu8ht" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_66.png" id="66_e3an7"]
+[ext_resource type="Texture2D" uid="uid://proa6won6lmv" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_67.png" id="67_463xk"]
+[ext_resource type="Texture2D" uid="uid://do3tw3vp1gkfi" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_68.png" id="68_70hch"]
+[ext_resource type="Texture2D" uid="uid://dsvw6dyeivpb6" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_69.png" id="69_p20c2"]
+[ext_resource type="Texture2D" uid="uid://dk12xrrpri832" path="res://Aglaea/images/vfx/aglaea_supreme/aglaea_supreme_vfx_70.png" id="70_ollbv"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_y2wa0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_w68pp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_qjhgd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_1ukbx")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_yw0dl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_83nxo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_kc53t")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_85m6i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_a38tc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_wc76r")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_ke4cp")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_ydqdu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_rc6ea")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_tbylu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_db4c4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_xsvh6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_gni7p")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_sifty")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_ur0dg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_lxu7e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_htu1j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_ctb58")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_5xvhy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_v8vt3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("25_3c4w1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("26_g24xu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("27_s1pkl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("28_mwmex")
+}, {
+"duration": 1.0,
+"texture": ExtResource("29_h7m0i")
+}, {
+"duration": 1.0,
+"texture": ExtResource("30_rscdy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("31_8pcni")
+}, {
+"duration": 1.0,
+"texture": ExtResource("32_el2ef")
+}, {
+"duration": 1.0,
+"texture": ExtResource("33_cejsh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("34_8754h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("35_2mvjs")
+}, {
+"duration": 1.0,
+"texture": ExtResource("36_7nvk1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("37_dhhnc")
+}, {
+"duration": 1.0,
+"texture": ExtResource("38_821eo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("39_o8d7a")
+}, {
+"duration": 1.0,
+"texture": ExtResource("40_rok0v")
+}, {
+"duration": 1.0,
+"texture": ExtResource("41_c6jn2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("42_lt8um")
+}, {
+"duration": 1.0,
+"texture": ExtResource("43_a151e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("44_xmaxt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("45_s12wq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("46_81x1h")
+}, {
+"duration": 1.0,
+"texture": ExtResource("47_tcksf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("48_mahbj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("49_ay2ss")
+}, {
+"duration": 1.0,
+"texture": ExtResource("50_smeka")
+}, {
+"duration": 1.0,
+"texture": ExtResource("51_ulse8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("52_pkhsg")
+}, {
+"duration": 1.0,
+"texture": ExtResource("53_pnfcd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("54_aut5c")
+}, {
+"duration": 1.0,
+"texture": ExtResource("55_65m8o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("56_gvkr5")
+}, {
+"duration": 1.0,
+"texture": ExtResource("57_ky4ud")
+}, {
+"duration": 1.0,
+"texture": ExtResource("58_o6j5s")
+}, {
+"duration": 1.0,
+"texture": ExtResource("59_np6f8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("60_gbpdf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("61_044kj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("62_m2ygd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("63_77i52")
+}, {
+"duration": 1.0,
+"texture": ExtResource("64_s6uda")
+}, {
+"duration": 1.0,
+"texture": ExtResource("65_suwtb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("66_e3an7")
+}, {
+"duration": 1.0,
+"texture": ExtResource("67_463xk")
+}, {
+"duration": 1.0,
+"texture": ExtResource("68_70hch")
+}, {
+"duration": 1.0,
+"texture": ExtResource("69_p20c2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("70_ollbv")
+}],
+"loop": false,
+"name": &"default",
+"speed": 24.0
+}]
+
+[node name="AglaeaSupremeFullscreen" type="Node2D"]
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_1")
+autoplay = "default"
+frame = 69
+frame_progress = 1.0

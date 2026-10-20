@@ -1,3 +1,13 @@
+// ============================================================
+// 纠缠（卡牌形态，2026-10-05 停用）
+//
+// 用户改设计：【纠缠】不再做成卡牌，改为玩家身上的 Power ——
+// 「抽到的下 n 张牌在本场战斗中的耗能 +1」，见 Scripts/Power/EntanglePower.cs。
+// 本卡牌连同它依赖的「抽到第二张就锁死出牌」机制（EntangleLockPower）一起注释停用。
+//
+// 本地化文案保留（MOENEGIMOD-AGLAEA_ENTANGLE.*），需要恢复时解开下面的块注释。
+// ============================================================
+/*
 using BaseLib.Utils;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
@@ -57,3 +67,4 @@ public class AglaeaEntangle() : AglaeaCard(-1,
         }
     }
 }
+*/

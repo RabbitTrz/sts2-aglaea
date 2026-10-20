@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace MoeNegiMod.Aglaea.Cards;
 
 /// <summary>
-/// 绞紧：本回合「间隙织线」造成的力量下降效果翻倍。
+/// 绞紧：本回合「间隙织线」触发力量下降所需的衣匠攻击次数降为 1。
 /// 升级后费用从 1 降为 0。
 /// </summary>
 public class AglaeaKnotTight() : AglaeaCard(1,

@@ -3,7 +3,7 @@
 一个《杀戮尖塔 2》(Slay the Spire 2) 的自制角色 Mod。角色主题是**裁缝与织线**，核心是召唤并指挥一群「衣匠」作战。
 
 - **作者**：RaconTrz
-- **版本**：0.1.2
+- **版本**：0.1.4
 - **依赖**：[BaseLib](https://steamcommunity.com/sharedfiles/filedetails/?id=3737335127) ≥ 3.4.7（**必须**，Mod 不会自己带）
 
 ---
@@ -31,7 +31,7 @@
 
 ## 玩家：安装
 
-下载 `AglaeaInstaller_Aglaea_v0.1.2.zip`，解压后：
+下载 `AglaeaInstaller_Aglaea_v0.1.4.zip`，解压后：
 
 1. 确认已安装 **BaseLib**（游戏 `mods` 目录下应有含 `BaseLib` 的文件夹）
 2. **完全关闭游戏**

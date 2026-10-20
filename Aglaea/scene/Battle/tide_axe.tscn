@@ -1,0 +1,57 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Texture2D" path="res://Aglaea/images/battle/tide_axe_anim_attack.png" id="1_attack"]
+[ext_resource type="Texture2D" path="res://Aglaea/images/battle/tide_axe_anim_idle.png" id="2_idle"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_tide_axe"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_attack")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 5.0
+},
+{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_idle")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[node name="TideAxe" type="Node2D"]
+
+[node name="Visuals" type="AnimatedSprite2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -97)
+scale = Vector2(0.19, 0.19)
+sprite_frames = SubResource("SpriteFrames_tide_axe")
+animation = &"idle"
+autoplay = "idle"
+
+[node name="FormVfx" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+
+[node name="Bounds" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 3
+anchors_preset = 0
+offset_left = -100.0
+offset_top = -194.0
+offset_right = 100.0
+offset_bottom = 0.0
+mouse_filter = 2
+
+[node name="CenterPos" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -100)
+
+[node name="IntentPos" type="Marker2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(0, -205)

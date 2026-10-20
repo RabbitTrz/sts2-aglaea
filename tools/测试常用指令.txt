@@ -1,0 +1,169 @@
+========================================================================
+ 杀戮尖塔 2 · Aglaea mod 测试常用指令库
+ （游戏内开发控制台用；mod 加载时会自动开放调试指令）
+========================================================================
+
+【打开控制台】
+  按 ` 或 ' 或 * 或 ^（也就是键盘左上角那一片符号键），或 Shift+8。
+  再按一次收起。
+
+------------------------------------------------------------------------
+一、本 mod 专用（最常用）
+------------------------------------------------------------------------
+  fight MOENEGIMOD-AGLAEA_ZANDAR_BOSS     ← 直接进赞达尔 Boss 战
+
+  赞达尔机制的观察点：
+    · 演化形态计数器挂在赞达尔身上，公理每次召唤 -2（含你召唤的衣匠）
+    · 计数归零 → 意图当场变【SET】，下个敌方回合清场进论证形态
+    · 论证形态每次行动都会先补场到 5 个敌人（含赞达尔）
+    · 求解会先播全屏演出，然后清场 + 39 伤害 + CALL 结算
+
+------------------------------------------------------------------------
+二、战斗控制
+------------------------------------------------------------------------
+  win                     直接赢得当前战斗
+  die                     自杀
+  kill all                杀死所有敌人（也有 kill <序号>）
+  damage <数量> [序号]     对全部敌人造成伤害；给序号则只打那一个（0 = 自己）
+  block <数量> [序号]      给自己/目标加格挡
+  power <ID> <数量> <序号>  给目标挂 buff（0 = 自己；敌人序号看打牌日志里的 index）
+  godmode                 无敌
+  instant                 瞬时模式（跳过动画/等待，测机制时很省时间）
+
+  敌人序号：对着敌人打一张牌，日志里会写 `(index N)`；0 是玩家自己。
+
+------------------------------------------------------------------------
+三、资源 / 卡牌 / 遗物
+------------------------------------------------------------------------
+  energy <数量>           加能量
+  draw <数量>             抽牌
+  heal <数量>             回血
+  gold <数量>             加金币
+  stars <数量>            加星（本角色用不到）
+  card <卡ID> [牌堆]       塞一张卡（默认手牌；牌堆 = Hand/Draw/Discard/Exhaust）
+  remove_card <卡ID> [牌堆] 删一张卡
+  upgrade <手牌序号>       升级手里第 N 张（0 = 最左）
+  enchant <附魔ID> ...     给手牌附魔
+  relic add <遗物ID>       加遗物（relic remove <ID> 移除）
+  potion <药水ID>          加药水
+
+------------------------------------------------------------------------
+四、跳转
+------------------------------------------------------------------------
+  fight <遭遇ID>           跳到指定遭遇战
+  event <事件ID>           跳到指定事件
+  room <房间ID>            跳到指定房间
+  act <数字>               跳到第 N 章
+  travel                   解锁地图跳转（跳到地图上任意点）
+  ancient <ID> <choice>    打开先古之民事件并选择选项
+  bestiary                 打开图鉴（看敌人/招式）
+
+------------------------------------------------------------------------
+五、排查 / 工具
+------------------------------------------------------------------------
+  dump                     把全部 Model ID 导出到控制台和日志（找 ID 用）
+  art <类型>               列出缺美术的内容（cards/powers/relics/monsters...）
+  open logs                打开日志文件夹
+  getlogs <名字>           打包日志成 zip 并打开所在目录（反馈问题时用）
+  unlock all               解锁全部内容
+
+------------------------------------------------------------------------
+六、本 mod 常用 ID 速查
+------------------------------------------------------------------------
+
+【遭遇战】
+  MOENEGIMOD-AGLAEA_ZANDAR_BOSS            赞达尔 Boss 战
+
+【状态牌】
+  MOENEGIMOD-AGLAEA_ANTINOMY               二律背反（0费：+1费、受3伤、消耗）
+  MOENEGIMOD-AGLAEA_WARPLATE               战甲（0费：保留、消耗、+1费、+8格挡）
+
+【常用卡牌（塞进手里试）】
+  MOENEGIMOD-AGLAEA_ATTACK                 打击
+  MOENEGIMOD-AGLAEA_DEFEND                 防御
+  MOENEGIMOD-AGLAEA_WEAVE                  编织（召唤 1 衣匠）
+  MOENEGIMOD-AGLAEA_STITCH_SNARE           刺纹之陷（召唤 1 衣匠）
+  MOENEGIMOD-AGLAEA_ARRAY                  列阵（召唤到上限 + 回满血）
+  MOENEGIMOD-AGLAEA_CHRYSALIS              若虫
+  MOENEGIMOD-AGLAEA_ALL_THREADS_DANCE      万丝齐舞
+  MOENEGIMOD-AGLAEA_GOLD_THREAD_DESCEND    金线降神
+  MOENEGIMOD-AGLAEA_GILT_BLOOD_FORGE       金血浇铸（每回合+至高之姿）
+  MOENEGIMOD-AGLAEA_SORROW_WEAVER          苦难织者（10层至高之姿）
+  MOENEGIMOD-AGLAEA_DEMIGOD_FORM           半神形态
+  MOENEGIMOD-AGLAEA_EPIC_FINALE            史诗终结
+  MOENEGIMOD-AGLAEA_EXECUTOR               执行者
+  MOENEGIMOD-AGLAEA_ROMANTIC_ENSEMBLE      浪漫合奏
+  MOENEGIMOD-AGLAEA_MYRIAD_NET             万帷网
+  MOENEGIMOD-AGLAEA_LEADERSHIP_CHARM       领袖魅力
+  MOENEGIMOD-AGLAEA_ARREST                 逮捕
+  MOENEGIMOD-AGLAEA_EXECUTE_THREAD         诛线
+  MOENEGIMOD-AGLAEA_FINE_NEEDLE            密针
+  MOENEGIMOD-AGLAEA_RE_SEW                 回缝
+  MOENEGIMOD-AGLAEA_TRIPLE_WEAVE           三织
+  MOENEGIMOD-AGLAEA_TOUCH_THREAD           触丝
+
+【关键能力（用 power 指令直接挂）】
+  MOENEGIMOD-SUPREME_POSE_POWER            至高之姿（挂上会看到金色环特效）
+  MOENEGIMOD-GOLDEN_THREAD_POWER           金丝
+  MOENEGIMOD-TAILOR_SWARM_POWER            衣匠（驱动衣匠攻击逻辑）
+  MOENEGIMOD-TAILOR_LIMIT_POWER            缠丝聚金（+2 衣匠上限）
+  MOENEGIMOD-WIDE_NET_POWER                广织成网
+  MOENEGIMOD-FATAL_ROMANCE_POWER           致命浪漫
+  MOENEGIMOD-DIVINITY_POWER                神性
+
+【敌人身上的能力（观战/调试时看）】
+  MOENEGIMOD-EVOLUTION_FORM_POWER          演化形态（计数）
+  MOENEGIMOD-ARGUMENT_FORM_POWER           论证形态（计数）
+  MOENEGIMOD-DEFRAG_POWER                  DEFRAG 生命优化
+  MOENEGIMOD-CALL_DESTRUCTION_POWER        CALL _毁灭论证法
+  MOENEGIMOD-WARPLATE_POWER                战甲（天谴斗士）
+  MOENEGIMOD-PUNISHMENT_OF_LAW_POWER       律法的惩戒（DEFRAG 召的爪牙）
+  MOENEGIMOD-VENGEANCE_AXE_POWER           复仇（黑潮蚀斧/蚀刃）
+  MOENEGIMOD-FORM_FORMULA_POWER            化形公式（赞达尔）
+  MOENEGIMOD-ENTANGLE_POWER                纠缠（抽n张牌耗能+1）
+
+【遗物】
+  MOENEGIMOD-AGLAEA_TOY                    黄金手链（初始）
+  MOENEGIMOD-AGLAEA_MOLTEN_BRACELET        熔光手链（开局召唤衣匠）
+  MOENEGIMOD-AGLAEA_EMBER_SEED             火种
+  MOENEGIMOD-AGLAEA_ANTI_GRAVITY_BOOTS     反重力皮靴
+  MOENEGIMOD-AGLAEA_FIRESTORM_TIDE         火力风暴潮
+  MOENEGIMOD-AGLAEA_LIGHT_SPEED_PROPELLER  光速螺旋桨
+
+------------------------------------------------------------------------
+七、常见测试场景（抄作业）
+------------------------------------------------------------------------
+  1) 测赞达尔：进战斗 → 观察演化计数 → 等 SET → 看立绘换论证形态
+     → 等求解 → 看全屏演出 + 纠缠挂在玩家身上
+       fight MOENEGIMOD-AGLAEA_ZANDAR_BOSS
+
+  2) 快速把演化计数填满（加快切形态）：打牌召唤衣匠；或
+       power MOENEGIMOD-TAILOR_LIMIT_POWER 3 0
+       card MOENEGIMOD-AGLAEA_ARRAY
+     （每召唤一个都算 1 点计数）
+
+  3) 测衣匠编队（左移 + 右侧排开）：召唤 1~6 只衣匠看站位；
+     数量上限被【缠丝聚金】拉高后一并验证压缩间距
+       power MOENEGIMOD-TAILOR_LIMIT_POWER 3 0
+
+  4) 测至高之姿特效 / 金丝联动：
+       power MOENEGIMOD-SUPREME_POSE_POWER 5 0
+     然后打攻击牌看层数消耗、特效是否随归零消失
+
+  5) 测二律背反/战甲：进赞达尔战吃塞牌；或直接
+       card MOENEGIMOD-AGLAEA_ANTINOMY
+       card MOENEGIMOD-AGLAEA_WARPLATE
+
+------------------------------------------------------------------------
+八、日志位置（排查问题先看这里）
+------------------------------------------------------------------------
+  %APPDATA%\SlayTheSpire2\logs\godot.log        当前这次运行的日志
+  （控制台输 `open logs` 可直接打开文件夹）
+
+  mod 相关关键词：
+    [Aglaea]                                    mod 自己的日志
+    形态贴图已切换 / 形态切换失败                 换形态时的诊断
+    赞达尔：演化形态计数-1 / 论证形态计数-1        计数是否在走
+    立绘驱动就绪（节点名=...）                    立绘驱动挂载
+
+========================================================================

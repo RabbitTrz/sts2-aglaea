@@ -9,6 +9,7 @@ using MegaCrit.Sts2.Core.Models.Powers;
 using MegaCrit.Sts2.Core.Nodes.Rooms;
 using MegaCrit.Sts2.Core.ValueProps;
 using MoeNegiMod.Aglaea.Cards;
+using MoeNegiMod.Aglaea.Character;
 using MoeNegiMod.Aglaea.Extensions;
 using MoeNegiMod.Aglaea.Monsters;
 using MoeNegiMod.Aglaea.Powers;
@@ -111,6 +112,9 @@ public static class TailorCmd
                 await AttackOnce(choiceContext, player, TailorAttackDamage, extraAttack: true);
             }
         }
+
+        // 召唤后重排编队（本体左移、衣匠排到右侧，与亡灵契约师一致）。
+        AglaeaFormation.Refresh(player);
 
         return tailor;
     }
@@ -301,6 +305,9 @@ public static class TailorCmd
 
         await CreatureCmd.Kill(dead);
         await AddChrysalisToDrawPile(choiceContext, player, source, dead.Count);
+
+        // 有衣匠阵亡：重排剩余衣匠的站位（本体不回弹，与亡灵契约师一致）。
+        AglaeaFormation.Refresh(player);
     }
 
     /// <summary>

@@ -177,11 +177,9 @@ public sealed class WeaveLinePower : AglaeaPower
             return;
         }
 
-        // 绞紧：玩家身上有该能力时，力量下降翻倍。
-        int loss = player.Creature.GetPower<TwistTightPower>() != null ? 2 : 1;
-
+        // 绞紧只改写触发门槛（见 HitsRequired），力量下降本身固定 1 点。
         await PowerCmd.Apply<MonarchsGazeStrengthDownPower>(
-            choiceContext, Owner, loss, dealer, cardSource, false);
+            choiceContext, Owner, 1, dealer, cardSource, false);
     }
 
     // 回合结束重置计数（力量损失本身由 TemporaryStrengthPower 在回合结束清除）。

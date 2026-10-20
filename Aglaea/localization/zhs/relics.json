@@ -13,10 +13,10 @@
     "MOENEGIMOD-AGLAEA_ANTI_GRAVITY_BOOTS.description": "战斗中被临时添加的卡牌获得附魔：[gold]迅速1[/gold]。",
     "MOENEGIMOD-AGLAEA_FIRESTORM_TIDE.title": "火力风暴潮",
     "MOENEGIMOD-AGLAEA_FIRESTORM_TIDE.flavor": "[red]这个遗物的细节已经被揭晓了[/red]",
-    "MOENEGIMOD-AGLAEA_FIRESTORM_TIDE.description": "每打出一张攻击牌，就在本回合使攻击伤害提升5%。",
+    "MOENEGIMOD-AGLAEA_FIRESTORM_TIDE.description": "每打出一张攻击牌，就在本回合使攻击伤害提升15%。",
     "MOENEGIMOD-AGLAEA_LIGHT_SPEED_PROPELLER.title": "光速螺旋桨",
     "MOENEGIMOD-AGLAEA_LIGHT_SPEED_PROPELLER.flavor": "[red]这个遗物的细节已经被揭晓了[/red]",
-    "MOENEGIMOD-AGLAEA_LIGHT_SPEED_PROPELLER.description": "在回合内每抽6张牌，获得1点[gold]力量[/gold]。",
+    "MOENEGIMOD-AGLAEA_LIGHT_SPEED_PROPELLER.description": "每抽10张牌，获得1点[gold]力量[/gold]。",
     "MOENEGIMOD-AGLAEA_MOLTEN_BRACELET.title": "熔光手链",
     "MOENEGIMOD-AGLAEA_MOLTEN_BRACELET.flavor": "[red]这个遗物的细节已经被揭晓了[/red]",
     "MOENEGIMOD-AGLAEA_MOLTEN_BRACELET.description": "战斗开始时召唤一名[gold]衣匠[/gold]。[gold]衣匠[/gold]的最大生命值提升2点。"

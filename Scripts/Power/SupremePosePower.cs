@@ -1,10 +1,13 @@
+using Godot;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Powers;
+using MoeNegiMod.Aglaea.Character;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,6 +21,9 @@ namespace MoeNegiMod.Aglaea.Powers;
 /// </summary>
 public sealed class SupremePosePower : AglaeaPower
 {
+    /// <summary>角色身上的环状形态特效（进入至高之姿时挂上、失去时移除）。</summary>
+    private Node2D? _vfx;
+
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [
         HoverTipFactory.FromPower<GoldenThreadPower>()
     ];
@@ -25,6 +31,13 @@ public sealed class SupremePosePower : AglaeaPower
     public override PowerType Type => PowerType.Buff;
 
     public override PowerStackType StackType => PowerStackType.Counter;
+
+    /// <summary>获得至高之姿：挂上金色环特效（原版恶魔形态同款挂点）。</summary>
+    public override Task AfterApplied(Creature? applier, CardModel? cardSource)
+    {
+        _vfx = AglaeaVfx.AttachFormVfx(Owner, AglaeaVfx.SupremePoseAuraScenePath);
+        return Task.CompletedTask;
+    }
 
     // 每打出 1 张攻击牌：消耗 1 层 → 抽 1 张 → 获得 1 层金丝。
     public override async Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
@@ -79,9 +92,12 @@ public sealed class SupremePosePower : AglaeaPower
         }
     }
 
-    // 至高之姿被移除（无论何种方式）时，一并移除玩家身上所有金丝。
+    // 至高之姿被移除（无论何种方式）时：撤掉环状特效，并一并移除玩家身上所有金丝。
     public override async Task AfterRemoved(Creature oldOwner)
     {
+        _vfx?.QueueFree();
+        _vfx = null;
+
         await PowerCmd.Remove<GoldenThreadPower>(oldOwner);
     }
 }

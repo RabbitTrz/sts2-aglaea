@@ -13,16 +13,17 @@ using System.Threading.Tasks;
 namespace MoeNegiMod.Aglaea.Cards;
 
 /// <summary>
-/// 作茧自缚：造成 3 点伤害。若存在衣匠，使生命值最低的衣匠恢复 2 点生命值。升级后 6 点伤害。
+/// 作茧自缚：造成 3 点伤害。若存在衣匠，使生命值最低的衣匠恢复 3 点生命值。
+/// 升级：伤害 +2、治疗 +1（5 伤 / 4 治疗）。
 /// </summary>
 public class AglaeaCocoonSelfTrap() : AglaeaCard(0,
     CardType.Attack, CardRarity.Common,
     TargetType.AnyEnemy)
 {
-    /// <summary>治疗量。固定 2，不随升级变化（升级只加伤害）。</summary>
-    private const decimal HealAmount = 2m;
-
-    protected override IEnumerable<DynamicVar> CanonicalVars => [new DamageVar(3, ValueProp.Move)];
+    protected override IEnumerable<DynamicVar> CanonicalVars => [
+        new DamageVar(3, ValueProp.Move),
+        new HealVar(3m)
+    ];
 
     protected override IEnumerable<IHoverTip> ExtraHoverTips => [
         HoverTipFactory.FromPower<TailorSwarmPower>()
@@ -32,18 +33,19 @@ public class AglaeaCocoonSelfTrap() : AglaeaCard(0,
     {
         await CommonActions.CardAttack(this, cardPlay).Execute(choiceContext);
 
-        // 使生命值最低的衣匠恢复 2 点生命。没有衣匠时只是不治疗，伤害照常结算。
+        // 使生命值最低的衣匠恢复生命。没有衣匠时只是不治疗，伤害照常结算。
         var lowest = TailorCmd.AliveTailors(cardPlay.Player)
             .OrderBy(c => c.CurrentHp)
             .FirstOrDefault();
         if (lowest != null)
         {
-            await CreatureCmd.Heal(lowest, HealAmount);
+            await CreatureCmd.Heal(lowest, DynamicVars.Heal.IntValue);
         }
     }
 
     protected override void OnUpgrade()
     {
-        DynamicVars.Damage.UpgradeValueBy(3m);
+        DynamicVars.Damage.UpgradeValueBy(2m);
+        DynamicVars.Heal.UpgradeValueBy(1m);
     }
 }

@@ -1,0 +1,13 @@
+{
+  "MOENEGIMOD-VFX_SECTION.title": "特效",
+  "MOENEGIMOD-AUDIO_SECTION.title": "音频",
+  "MOENEGIMOD-BGM_VOLUME_PERCENT.title": "BGM 音量（%）",
+  "MOENEGIMOD-BGM_VOLUME_PERCENT.hover.title": "自定义 BGM 音量",
+  "MOENEGIMOD-BGM_VOLUME_PERCENT.hover.desc": "赞达尔 Boss 战那首自定义 BGM 的播放音量（百分比）。\n它是以音频文件形式直接播放的，不经过游戏的音乐总线，所以游戏里的音乐音量滑条管不到它——觉得盖住音效就往低调。",
+  "MOENEGIMOD-ENEMY_LONG_VFX.title": "敌方长特效",
+  "MOENEGIMOD-ENEMY_LONG_VFX.hover.title": "敌方长特效（全屏演出）",
+  "MOENEGIMOD-ENEMY_LONG_VFX.hover.desc": "开：播放敌方的全屏演出——赞达尔【求解：第一因之果】的大招动画。\n关：跳过该演出（战斗结算不受影响）。",
+  "MOENEGIMOD-ALLY_LONG_VFX.title": "我方长特效",
+  "MOENEGIMOD-ALLY_LONG_VFX.hover.title": "我方长特效（全屏演出）",
+  "MOENEGIMOD-ALLY_LONG_VFX.hover.desc": "开：播放我方的全屏演出——【华珠之礼】【苦难织者】【披姿】【蓄姿】打出时的动画。\n关：跳过这些演出（卡牌效果照常结算）。角色身上的【至高之姿】金色环不受此开关影响。"
+}

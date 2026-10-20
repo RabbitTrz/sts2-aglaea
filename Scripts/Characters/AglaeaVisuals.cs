@@ -1,5 +1,6 @@
 using BaseLib.Utils.NodeFactories;
 using Godot;
+using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Nodes.Combat;
 using MegaCrit.Sts2.Core.Nodes.RestSite;
 using MegaCrit.Sts2.Core.Nodes.Screens.Shops;
@@ -42,6 +43,12 @@ public static class AglaeaVisuals
     /// <summary>衣匠战斗立绘场景的 res:// 路径。</summary>
     public const string TailorScenePath = "res://Aglaea/scene/Battle/tailor.tscn";
 
+    /// <summary>v0.1.4 敌人立绘场景（都沿用衣匠那套「静态图 + 场景」的做法）。</summary>
+    public const string ZandarScenePath = "res://Aglaea/scene/Battle/zandar.tscn";
+    public const string ScourgeFighterScenePath = "res://Aglaea/scene/Battle/scourge_fighter.tscn";
+    public const string TideBladeScenePath = "res://Aglaea/scene/Battle/tide_blade.tscn";
+    public const string TideAxeScenePath = "res://Aglaea/scene/Battle/tide_axe.tscn";
+
     /// <summary>火堆立绘场景：静态图，节点结构照抄原版 ironclad_rest_site.tscn。</summary>
     public const string RestScenePath = "res://Aglaea/scene/Rest/aglaea_rest.tscn";
 
@@ -63,9 +70,177 @@ public static class AglaeaVisuals
         NodeFactory.RegisterSceneType<NCreatureVisuals>(ScenePath);
         NodeFactory.RegisterSceneType<NCreatureVisuals>(TailorScenePath);
 
+        // v0.1.4 的 4 个敌人：同样的静态图场景转换。
+        NodeFactory.RegisterSceneType<NCreatureVisuals>(ZandarScenePath);
+        NodeFactory.RegisterSceneType<NCreatureVisuals>(ScourgeFighterScenePath);
+        NodeFactory.RegisterSceneType<NCreatureVisuals>(TideBladeScenePath);
+        NodeFactory.RegisterSceneType<NCreatureVisuals>(TideAxeScenePath);
+
         // 火堆 / 商店立绘同样是「静态图场景 → 引擎节点」的转换，各注册一次。
         NodeFactory.RegisterSceneType<NRestSiteCharacter>(RestScenePath);
         NodeFactory.RegisterSceneType<NMerchantCharacter>(MerchantScenePath);
+    }
+
+    /// <summary>
+    /// 具名形态的贴图后缀（按生物记录，驱动节点被重建后自动恢复）。
+    /// 关键：实测发现立绘驱动在战斗中会被反复重建（同一只 Boss 一局能挂 36 次），
+    /// 只把后缀设在当前驱动上会丢——所以形态同时记在这里，每次挂载/查找驱动时回灌。
+    /// </summary>
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<Creature, FormState> MonsterForms = new();
+
+    private sealed class FormState
+    {
+        public string Suffix = "";
+    }
+
+    /// <summary>每张立绘节点的基础贴图备份（首次切换形态时抓取，用于切回基础形态）。</summary>
+    private static readonly System.Runtime.CompilerServices.ConditionalWeakTable<AnimatedSprite2D, FrameBackup> FrameBackups = new();
+
+    private sealed class FrameBackup
+    {
+        public Texture2D? Idle;
+        public Texture2D? Attack;
+    }
+
+    /// <summary>
+    /// 切换怪物立绘的形态贴图（多形态立绘用，如赞达尔 演化 ↔ 论证）。suffix 为空串时回到基础贴图。
+    ///
+    /// **主机制 = 直接改立绘节点上 AnimatedSprite2D 的贴图帧**（把 idle/attack 两个动画的
+    /// 第 0 帧贴图换成 `idle_argument`/`attack_argument` 的贴图）：不依赖立绘驱动，
+    /// 无论驱动在不在、后缀对不对，画面都会立刻变。
+    /// 驱动侧的 suffix 只作为辅助（让驱动播放逻辑也知道当前形态）。
+    /// </summary>
+    public static void SetMonsterForm(Creature creature, string suffix)
+    {
+        // 统一后缀格式：调用方写 "argument"，内部一律用 "_argument"（贴图动画叫 idle_argument）。
+        // 少了这个下划线会静默变成 "idleargument"、HasAnimation 查不到，贴图就永远不切。
+        if (suffix.Length > 0 && !suffix.StartsWith("_"))
+        {
+            suffix = "_" + suffix;
+        }
+
+        MonsterForms.Remove(creature);
+        if (suffix.Length > 0)
+        {
+            MonsterForms.Add(creature, new FormState { Suffix = suffix });
+        }
+
+        NCreature? node = creature.GetCreatureNode();
+        if (node == null)
+        {
+            MainFile.Logger.Warn($"[Aglaea] 形态切换失败：找不到 {creature.LogName} 的立绘节点。");
+            return;
+        }
+
+        ApplyFormToSprite(node.Visuals, suffix);
+        AglaeaAnimationPatch.FindDriver(node)?.SetFormSuffix(suffix);
+    }
+
+    /// <summary>
+    /// 把 idle/attack 动画的贴图换成指定形态（suffix 为空 = 换回首次备份的基础贴图）。
+    ///
+    /// 实测教训：`%Visuals` 查到的 AnimatedSprite2D 不一定是画面上真正在用的那一个
+    /// （节点树里可能有多个），所以这里**递归找出全部**并逐一切换，每个都打日志。
+    /// </summary>
+    private static void ApplyFormToSprite(NCreatureVisuals? visuals, string suffix)
+    {
+        if (visuals == null)
+        {
+            return;
+        }
+
+        int found = 0;
+        int changed = 0;
+        foreach (AnimatedSprite2D sprite in FindSprites(visuals))
+        {
+            found++;
+            if (ApplyFormToSprite(sprite, suffix))
+            {
+                changed++;
+            }
+        }
+
+        if (found == 0)
+        {
+            MainFile.Logger.Warn("[Aglaea] 形态切换失败：立绘下没有 AnimatedSprite2D。");
+        }
+        else if (changed == 0 && suffix.Length > 0)
+        {
+            MainFile.Logger.Warn($"[Aglaea] 形态切换：找到 {found} 个立绘节点，但没有一个带 '{suffix}' 形态的动画。");
+        }
+    }
+
+    private static IEnumerable<AnimatedSprite2D> FindSprites(Node root)
+    {
+        foreach (Node child in root.GetChildren())
+        {
+            if (child is AnimatedSprite2D sprite)
+            {
+                yield return sprite;
+            }
+
+            foreach (AnimatedSprite2D nested in FindSprites(child))
+            {
+                yield return nested;
+            }
+        }
+    }
+
+    /// <summary>对单个立绘节点执行切换；返回是否真的改动了贴图。</summary>
+    private static bool ApplyFormToSprite(AnimatedSprite2D sprite, string suffix)
+    {
+        SpriteFrames frames = sprite.SpriteFrames;
+        if (!frames.HasAnimation("idle") || !frames.HasAnimation("attack"))
+        {
+            return false;
+        }
+
+        if (!FrameBackups.TryGetValue(sprite, out FrameBackup? backup))
+        {
+            backup = new FrameBackup
+            {
+                Idle = frames.GetFrameTexture("idle", 0),
+                Attack = frames.GetFrameTexture("attack", 0),
+            };
+            FrameBackups.Add(sprite, backup);
+        }
+
+        Texture2D? idle = backup.Idle;
+        Texture2D? attack = backup.Attack;
+        if (suffix.Length > 0)
+        {
+            if (frames.HasAnimation("idle" + suffix) && frames.GetFrameCount("idle" + suffix) > 0)
+            {
+                idle = frames.GetFrameTexture("idle" + suffix, 0);
+            }
+            if (frames.HasAnimation("attack" + suffix) && frames.GetFrameCount("attack" + suffix) > 0)
+            {
+                attack = frames.GetFrameTexture("attack" + suffix, 0);
+            }
+        }
+
+        // 目标贴图与备份一致说明该节点没有对应形态的动画（改了也白改），如实记录。
+        bool changed = idle != backup.Idle || attack != backup.Attack;
+        if (idle != null)
+        {
+            frames.SetFrame("idle", 0, idle);
+        }
+        if (attack != null)
+        {
+            frames.SetFrame("attack", 0, attack);
+        }
+
+        sprite.QueueRedraw();
+        MainFile.Logger.Info(
+            $"[Aglaea] 形态切换：节点={sprite.GetPath()}（动画=[{string.Join(",", frames.GetAnimationNames())}]）" +
+            $" suffix='{suffix}' 改动={changed} idle={idle?.ResourcePath} attack={attack?.ResourcePath}");
+        return changed;
+    }
+
+    /// <summary>该生物当前的形态贴图后缀（没有记录时为空串）。</summary>
+    internal static string GetMonsterForm(Creature creature)
+    {
+        return MonsterForms.TryGetValue(creature, out FormState? state) ? state.Suffix : "";
     }
 
     /// <summary>
@@ -113,6 +288,13 @@ public partial class AglaeaSpriteDriver : Node, IDeathDelayer
     /// <summary>当前正在播放的动画名，用于避免重复 Play 导致动画被重置。</summary>
     private string _playing = "";
 
+    /// <summary>
+    /// 形态贴图后缀（多形态立绘的怪物用，如赞达尔的「论证」形态）。
+    /// 空串 = 基础贴图；非空时逻辑动画名 idle/attack 会映射到 idle/attack + 后缀，
+    /// 场景里没有对应动画时自动回退到基础贴图。
+    /// </summary>
+    private string _formSuffix = "";
+
     /// <summary>当前一次性动画的收尾计时器。非空表示有一次性的 attack/hit 正在播。</summary>
     private SceneTreeTimer? _oneShotTimer;
 
@@ -142,7 +324,8 @@ public partial class AglaeaSpriteDriver : Node, IDeathDelayer
         }
 
         _basePosition = Sprite.Position;
-        MainFile.Logger.Info($"[Aglaea] 立绘驱动就绪，frames={DescribeAnimations()}");
+        // 节点名一并记下来：驱动是「按类型」查找的，名字只用于排查。
+        MainFile.Logger.Info($"[Aglaea] 立绘驱动就绪（节点名={Name}），frames={DescribeAnimations()}");
         Play(IdleAnim);
     }
 
@@ -152,19 +335,58 @@ public partial class AglaeaSpriteDriver : Node, IDeathDelayer
     /// </summary>
     public void Play(string animName)
     {
-        if (Sprite == null || _dying || _playing == animName)
+        if (Sprite == null || _dying)
         {
             return;
         }
-        if (!Sprite.SpriteFrames.HasAnimation(animName))
+
+        string resolved = ResolveAnim(animName);
+        if (_playing == resolved)
+        {
+            return;
+        }
+        if (!Sprite.SpriteFrames.HasAnimation(resolved))
         {
             return;
         }
 
         CancelOneShot();
         ResetVisualState();
-        _playing = animName;
-        Sprite.Play(animName);
+        _playing = resolved;
+        Sprite.Play(resolved);
+    }
+
+    /// <summary>
+    /// 切换形态贴图（多形态立绘）：suffix 会拼在 idle/attack 后面（如 "_argument"）。
+    /// 传空串回到基础贴图；切换后立刻回到待机。
+    /// </summary>
+    public void SetFormSuffix(string suffix)
+    {
+        if (_formSuffix == suffix)
+        {
+            return;
+        }
+
+        _formSuffix = suffix;
+        _playing = "";
+        if (Sprite != null && !_dying)
+        {
+            ResetVisualState();
+            Play(IdleAnim);
+        }
+    }
+
+    /// <summary>把逻辑动画名映射到当前形态的贴图动画；没有对应动画时回退基础贴图。</summary>
+    private string ResolveAnim(string animName)
+    {
+        if (_formSuffix.Length > 0
+            && Sprite != null
+            && Sprite.SpriteFrames.HasAnimation(animName + _formSuffix))
+        {
+            return animName + _formSuffix;
+        }
+
+        return animName;
     }
 
     /// <summary>
@@ -279,7 +501,8 @@ public partial class AglaeaSpriteDriver : Node, IDeathDelayer
             return;
         }
 
-        if (!Sprite.SpriteFrames.HasAnimation(animName))
+        string resolved = ResolveAnim(animName);
+        if (!Sprite.SpriteFrames.HasAnimation(resolved))
         {
             Play(IdleAnim);
             return;
@@ -290,11 +513,11 @@ public partial class AglaeaSpriteDriver : Node, IDeathDelayer
         CancelOneShot();
         ResetVisualState();
 
-        _playing = animName;
-        Sprite.Play(animName);
+        _playing = resolved;
+        Sprite.Play(resolved);
 
-        float duration = GetAnimationDuration(animName);
-        MainFile.Logger.Info($"[Aglaea] one-shot '{animName}' duration={duration}");
+        float duration = GetAnimationDuration(resolved);
+        MainFile.Logger.Info($"[Aglaea] one-shot '{resolved}' duration={duration}");
 
         SceneTree? tree = GetTree();
         if (duration <= 0f || tree == null)
@@ -310,10 +533,11 @@ public partial class AglaeaSpriteDriver : Node, IDeathDelayer
     private void OnOneShotTimeout()
     {
         _oneShotTimer = null;
-        _playing = IdleAnim;
-        if (Sprite != null && Sprite.SpriteFrames.HasAnimation(IdleAnim))
+        string resolvedIdle = ResolveAnim(IdleAnim);
+        _playing = resolvedIdle;
+        if (Sprite != null && Sprite.SpriteFrames.HasAnimation(resolvedIdle))
         {
-            Sprite.Play(IdleAnim);
+            Sprite.Play(resolvedIdle);
         }
     }
 

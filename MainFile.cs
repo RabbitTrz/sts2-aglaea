@@ -1,4 +1,5 @@
 using System.Reflection;
+using BaseLib.Config;
 using BaseLib.Utils;
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Logging;
@@ -49,5 +50,8 @@ public class MainFile
 
         // 登记立绘场景，让 BaseLib 把它转成 NCreatureVisuals。
         MoeNegiMod.Aglaea.Character.AglaeaVisuals.Register();
+
+        // 注册游戏内「模组配置」（设置菜单里的 Mod Configuration）：长特效开关。
+        ModConfigRegistry.Register(ModId, new MoeNegiMod.Aglaea.AglaeaConfig());
     }
 }

@@ -9,16 +9,15 @@ using System.Threading.Tasks;
 namespace MoeNegiMod.Aglaea.Relics;
 
 /// <summary>
-/// 光速螺旋桨（专属遗物，不进池）：回合内每抽 6 张牌，获得 1 点力量。
+/// 光速螺旋桨（专属遗物，不进池）：每抽 10 张牌，获得 1 点力量。
 /// 由「火种」累计满 12 层时发放。
 ///
-/// 计数在玩家回合开始时清零，即「回合内」的语义。
-/// v0.1.3 之前的效果是「每打出 5 张攻击牌放 1 张若虫+」，已替换。
+/// 计数跨回合累计，每场战斗开始时清零（牌面没有「本回合」限定）。
 /// </summary>
 public class AglaeaLightSpeedPropeller : AglaeaExclusiveRelic
 {
     /// <summary>每多少张抽牌给 1 点力量。</summary>
-    private const int CardsPerTrigger = 6;
+    private const int CardsPerTrigger = 10;
 
     private int _drawCount;
 
@@ -42,12 +41,10 @@ public class AglaeaLightSpeedPropeller : AglaeaExclusiveRelic
             choiceContext, Owner.Creature, 1, Owner.Creature, null);
     }
 
-    public override Task AfterPlayerTurnStart(PlayerChoiceContext choiceContext, Player player)
+    /// <summary>跨回合累计，所以只在战斗开始时清零。</summary>
+    public override Task BeforeCombatStart()
     {
-        if (player == Owner)
-        {
-            _drawCount = 0;
-        }
+        _drawCount = 0;
         return Task.CompletedTask;
     }
 }

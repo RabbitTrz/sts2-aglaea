@@ -68,6 +68,9 @@ internal static class AglaeaAnimationPatch
     /// 在 creature 的视觉节点里找本 mod 的立绘驱动；不是本 mod 的立绘就返回 null。
     /// 转换后的节点是 BaseLib <c>new</c> 出来的，_Ready 不会跑，
     /// 所以驱动永远不会自己挂上——这里必须补挂。
+    ///
+    /// 每次查找/补挂后都把该生物记录的形态后缀回灌一遍：驱动节点在战斗中会被
+    /// 反复重建，新驱动默认是基础贴图，不回灌就会出现「形态切了但立绘没切」。
     /// </summary>
     internal static AglaeaSpriteDriver? FindDriver(NCreature creature)
     {
@@ -77,12 +80,26 @@ internal static class AglaeaAnimationPatch
             return null;
         }
 
-        AglaeaSpriteDriver? driver = visuals.GetNodeOrNull<AglaeaSpriteDriver>(nameof(AglaeaSpriteDriver));
+        // 按【类型】找，不能按名字找：Godot 给 C# 节点分配的默认名字不是类名
+        // （实测驱动节点根本没有叫 "AglaeaSpriteDriver"），按名字查永远查不到，
+        // 结果每次动画触发都会新建一个驱动 —— 之前「形态贴图切了又丢」就是这个原因。
+        AglaeaSpriteDriver? driver = null;
+        foreach (Node child in visuals.GetChildren())
+        {
+            if (child is AglaeaSpriteDriver found)
+            {
+                driver = found;
+                break;
+            }
+        }
+
         if (driver == null)
         {
             driver = new AglaeaSpriteDriver();
             visuals.AddChild(driver);
         }
+
+        driver.SetFormSuffix(AglaeaVisuals.GetMonsterForm(creature.Entity));
         return driver;
     }
 }

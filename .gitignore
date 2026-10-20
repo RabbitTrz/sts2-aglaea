@@ -13,8 +13,9 @@ obj/
 dist/
 # 安装器构建时填充的素材目录
 tools/installer/payload/
-# 发出去的压缩包（每个 ~100 MB）
+# 发出去的压缩包与解压目录（每个 ~100-200 MB，不入库）
 *.zip
+tools/installer/AglaeaInstaller_Aglaea_*/
 *.user
 .vs/
 

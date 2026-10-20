@@ -10,16 +10,15 @@ using System.Threading.Tasks;
 namespace MoeNegiMod.Aglaea.Relics;
 
 /// <summary>
-/// 火力风暴潮（专属遗物，不进池）：每打出一张攻击牌，本回合内自身的攻击伤害 +5%（可叠）。
+/// 火力风暴潮（专属遗物，不进池）：每打出一张攻击牌，本回合内自身的攻击伤害 +15%（可叠）。
 /// 由「火种」累计满 12 层时发放。
 ///
 /// 计数只在本回合内累计，玩家回合开始时清零。
-/// v0.1.3 之前的效果是「每打出 5 张攻击牌获得 1 层至高之姿」，已替换。
 /// </summary>
 public class AglaeaFirestormTide : AglaeaExclusiveRelic
 {
     /// <summary>每张攻击牌提供的伤害加成（加法百分比，作用在乘区上）。</summary>
-    private const decimal PerCardBonus = 0.05m;
+    private const decimal PerCardBonus = 0.15m;
 
     /// <summary>本回合已打出的攻击牌数。</summary>
     private int _cardsThisTurn;
