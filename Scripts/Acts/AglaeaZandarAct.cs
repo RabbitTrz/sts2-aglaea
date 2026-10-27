@@ -15,8 +15,8 @@ namespace MoeNegiMod.Aglaea.Acts;
 /// <summary>
 /// 第四章（Index 3）：隐德来希。
 ///
-/// 极短单线章节：休息点 → 商店 → 赞达尔 Boss，没有常规战斗。
-/// 这张地图是自绘的（<see cref="AglaeaZandarActMap"/>），起点是休息点而不是 Ancient ——
+/// 极短单线章节：事件「往昔的涟漪」 → 商店 → 赞达尔 Boss，没有常规战斗。
+/// 这张地图是自绘的（<see cref="AglaeaZandarActMap"/>），起点是问号事件而不是 Ancient ——
 /// 原版每章开头必有古神事件，但游戏本身允许没有（<c>RoomSet.HasAncient</c> 的注释写明），
 /// 只要起点不是 <c>MapPointType.Ancient</c>，就不会去读 <c>PullAncient()</c>，也就不会因 ancient 为空而抛异常。
 ///
@@ -54,22 +54,25 @@ public sealed class AglaeaZandarAct : CustomActModel
     {
     }
 
-    /// <summary>没有 Ancient（地图起点是休息点，不会被查询）。</summary>
+    /// <summary>没有 Ancient（地图起点是问号事件，不会被查询）。</summary>
     public override IEnumerable<AncientEventModel> AllAncients => Array.Empty<AncientEventModel>();
 
     public override IEnumerable<AncientEventModel> GetUnlockedAncients(UnlockState unlockState)
         => Array.Empty<AncientEventModel>();
 
-    /// <summary>没有专属事件；共享事件池由 <c>ActModel.GenerateRooms</c> 自动并入（本章没有事件房，用不到）。</summary>
+    /// <summary>
+    /// 本类不直接列事件；「往昔的涟漪」由 BaseLib 按 <c>AglaeaRippleEvent.Acts</c> 自动并入，
+    /// 并由 <c>Act4EventRoomPatch</c> 固定抽取。
+    /// </summary>
     public override IEnumerable<EventModel> AllEvents => Array.Empty<EventModel>();
 
-    /// <summary>自绘单线地图（休息点 → 商店 → Boss）。</summary>
+    /// <summary>自绘单线地图（往昔的涟漪 → 商店 → Boss）。</summary>
     protected override ActMap CustomCreateMap(RunState runState, bool replaceTreasureWithElites)
         => new AglaeaZandarActMap(runState);
 
     /// <summary>
     /// 仅用于「继续游戏」界面估算总楼层。原版公式是 BaseNumberOfRooms + 2（Ancient + Boss），
-    /// 本章没有 Ancient，所以填 1 才能让估算楼层等于实际的「休息点 + 商店 + Boss」3 层。
+    /// 本章没有 Ancient，所以填 1 才能让估算楼层等于实际的「事件 + 商店 + Boss」3 层。
     /// </summary>
     protected override int BaseNumberOfRooms => 1;
 

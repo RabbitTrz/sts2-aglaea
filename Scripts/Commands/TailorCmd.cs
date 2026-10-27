@@ -122,7 +122,16 @@ public static class TailorCmd
     /// <summary>当前存活且属于本玩家的所有衣匠。</summary>
     public static List<Creature> AliveTailors(Player player)
     {
-        return player.PlayerCombatState.Pets
+        // 战斗房间 _Ready（CreateAllyNodes → PositionPlayersAndPets 后置补丁）可能早于
+        // PlayerCombatState 赋值，此时它是 null。这里必须容错：否则异常会打断整个
+        // NCombatRoom._Ready，后续 CreateEnemyNodes 不执行，敌人（如赞达尔）就不会被刷出来。
+        var combatState = player.PlayerCombatState;
+        if (combatState == null)
+        {
+            return new List<Creature>();
+        }
+
+        return combatState.Pets
             .Where(c => c.IsAlive && c.Monster is AglaeaTailorMonster)
             .ToList();
     }
@@ -278,6 +287,12 @@ public static class TailorCmd
             return;
         }
 
+        // 这一下会把它打死：在扣血之前触发锻泪匠躯（此时衣匠仍存活，可当 dealer）。
+        if (tailor.CurrentHp <= 1)
+        {
+            await ForgedTearBodyPower.TriggerFromTailor(choiceContext, player, tailor);
+        }
+
         tailor.LoseHpInternal(1, ValueProp.Unblockable | ValueProp.Unpowered);
 
         if (!tailor.IsAlive)
@@ -343,7 +358,10 @@ public static class TailorCmd
         foreach (var t in targets)
         {
             // 通知玩家身上的「衣匠攻击前」监听者（用于锻泪匠躯等）。
-            foreach (var listener in player.Creature.Powers.OfType<ITailorAttackListener>())
+            // 必须先 ToList 快照：监听者可能在回调里移除/增加 power，
+            // 直接枚举 Powers 会抛 "Collection was modified"（沐浴黄金就会移除自己），
+            // 异常会让整次出牌中断、卡牌卡在画面中央。
+            foreach (var listener in player.Creature.Powers.OfType<ITailorAttackListener>().ToList())
             {
                 await listener.BeforeTailorAttack(choiceContext, player, tailor, t);
             }
@@ -363,7 +381,7 @@ public static class TailorCmd
             // damage 参数 = 本次攻击【实际结算】的伤害，已含致命浪漫的加成。
             // 注：当前三个实现（沐浴黄金/回纺为守/半神形态）都不读此参数，
             // 各自读自己需要的 power；新增监听者若要用它，按"实际伤害"理解。
-            foreach (var listener in player.Creature.Powers.OfType<ITailorAttackListener>())
+            foreach (var listener in player.Creature.Powers.OfType<ITailorAttackListener>().ToList())
             {
                 await listener.AfterTailorAttack(choiceContext, player, tailor, t, damageToTarget);
             }

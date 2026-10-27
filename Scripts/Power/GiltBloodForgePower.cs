@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 namespace MoeNegiMod.Aglaea.Powers;
 
 /// <summary>
-/// 金血浇铸：每回合开始时，失去等同于本能力层数的生命，获得 2 倍层数的至高之姿。
+/// 金血浇铸：每回合开始时，失去等同于本能力层数的生命，获得 3 倍层数的至高之姿。
 ///
-/// 每层 = 每回合 1 点生命 → 2 层至高之姿（即 1:2 的兑换比例）。
+/// 每层 = 每回合 1 点生命 → 3 层至高之姿（即 1:3 的兑换比例）。
 /// Amount 即层数，也是能力图标上显示的数字：
-///   1 层 → 每回合失 1 点生命，得 2 层至高之姿
-///   2 层 → 每回合失 2 点生命，得 4 层至高之姿
+///   1 层 → 每回合失 1 点生命，得 3 层至高之姿
+///   2 层 → 每回合失 2 点生命，得 6 层至高之姿
 /// 卡牌每次打出为能力累积 1 层（见 AglaeaGiltBloodForge）。
 /// </summary>
 public sealed class GiltBloodForgePower : AglaeaPower
@@ -55,7 +55,7 @@ public sealed class GiltBloodForgePower : AglaeaPower
             new ThrowingPlayerChoiceContext(), Owner, Amount,
             ValueProp.Unblockable | ValueProp.Unpowered, null, null);
 
-        // 1 层 = 2 层至高之姿。
+        // 1 层 = 3 层至高之姿。
         await PowerCmd.Apply<SupremePosePower>(
             new ThrowingPlayerChoiceContext(), Owner, Amount * _supremePosePerStack, Owner, null);
     }

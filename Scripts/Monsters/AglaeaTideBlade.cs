@@ -1,7 +1,9 @@
 using BaseLib.Abstracts;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Ascension;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.MonsterMoves.Intents;
 using MegaCrit.Sts2.Core.MonsterMoves.MonsterMoveStateMachine;
 using MoeNegiMod.Aglaea.Character;
@@ -23,13 +25,18 @@ namespace MoeNegiMod.Aglaea.Monsters;
 /// </summary>
 public sealed class AglaeaTideBlade : CustomMonsterModel
 {
-    /// <summary>【锋芒】单次伤害与次数（v0.1.4 单人数值；进阶 8/9 版本暂不做）。</summary>
-    private const int EdgeDamage = 3;
+    /// <summary>【锋芒】单次伤害与次数（进阶 9 单次伤害 +1）。</summary>
+    private static int EdgeDamage =>
+        AscensionHelper.GetValueIfAscension(AscensionLevel.DeadlyEnemies, 4, 3);
+
     private const int EdgeHits = 2;
 
-    public override int MinInitialHp => 35;
+    // 进阶 8：生命值 +5。
+    public override int MinInitialHp =>
+        AscensionHelper.GetValueIfAscension(AscensionLevel.ToughEnemies, 40, 35);
 
-    public override int MaxInitialHp => 35;
+    public override int MaxInitialHp =>
+        AscensionHelper.GetValueIfAscension(AscensionLevel.ToughEnemies, 40, 35);
 
     public override async Task AfterAddedToRoom()
     {

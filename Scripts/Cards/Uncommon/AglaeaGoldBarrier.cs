@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 namespace MoeNegiMod.Aglaea.Cards;
 
 /// <summary>
-/// 金丝成障：衣匠受到伤害时，降低 1 点受到的伤害。升级：获得固有。
-/// （v0.1.3 改动：原先的效果是「回合开始时若处于至高之姿则获得 6 点格挡」。）
+/// 金丝成障：存在衣匠时，你受到的伤害减少 1 点。升级：获得固有。
 /// </summary>
 public class AglaeaGoldBarrier() : AglaeaCard(1,
     CardType.Power, CardRarity.Uncommon,

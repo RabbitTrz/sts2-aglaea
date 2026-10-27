@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace MoeNegiMod.Aglaea.Cards;
 
 /// <summary>
-/// 锻泪匠躯：衣匠死亡时，对所有敌人造成 10 点伤害（视为衣匠攻击）。升级后 15 点。
+/// 锻泪匠躯：衣匠受到致命伤害时，对所有敌人造成 10 点伤害（视为衣匠攻击）。升级后 15 点。
 /// （v0.1.3 改动：原先的效果是「衣匠受到伤害时由所有衣匠均摊」。）
 /// </summary>
 public class AglaeaForgedTearBody() : AglaeaCard(2,

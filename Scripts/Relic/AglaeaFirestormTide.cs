@@ -1,3 +1,4 @@
+using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
@@ -23,12 +24,18 @@ public class AglaeaFirestormTide : AglaeaExclusiveRelic
     /// <summary>本回合已打出的攻击牌数。</summary>
     private int _cardsThisTurn;
 
+    /// <summary>遗物图标上显示本回合已打出的攻击牌数（= 当前层数）。</summary>
+    public override bool ShowCounter => CombatManager.Instance.IsInProgress;
+
+    public override int DisplayAmount => _cardsThisTurn;
+
     public override Task AfterCardPlayed(PlayerChoiceContext choiceContext, CardPlay cardPlay)
     {
         // 只统计本次行动玩家自己的攻击牌（多人对局中避免统计他人）。
         if (cardPlay.Card.Type == CardType.Attack && cardPlay.Player == Owner)
         {
             _cardsThisTurn++;
+            InvokeDisplayAmountChanged();
         }
         return Task.CompletedTask;
     }
@@ -38,6 +45,7 @@ public class AglaeaFirestormTide : AglaeaExclusiveRelic
         if (player == Owner)
         {
             _cardsThisTurn = 0;
+            InvokeDisplayAmountChanged();
         }
         return Task.CompletedTask;
     }

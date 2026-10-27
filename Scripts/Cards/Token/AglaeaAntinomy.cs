@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 namespace MoeNegiMod.Aglaea.Cards;
 
 /// <summary>
-/// 二律背反（状态牌）：0 费，可打出。获得 1 费，受到 3 点伤害（可被格挡）。消耗。
+/// 二律背反（状态牌）：0 费，可打出。获得 1 费，受到 6 点伤害（可被格挡）。消耗。
 /// 由赞达尔的【智识的二律背反】塞进玩家手牌。
 ///
-/// 自伤固定 3 点，走 <c>Move | Unpowered</c>（与灼伤 Burn 等原版自伤牌一致）：
+/// 自伤固定 6 点，走 <c>Move | Unpowered</c>（与灼伤 Burn 等原版自伤牌一致）：
 /// 可被格挡、不被力量加成、也不吃虚弱减伤。注意 DamageVar 与运行时必须用同一组属性
 /// （2026-10-05 修复：此前 DamageVar 少了 Unpowered，卡面会显示被虚弱削减后的伤害）。
 /// </summary>
@@ -30,7 +30,7 @@ public class AglaeaAntinomy() : AglaeaCard(0,
         new EnergyVar(1),
         // 固定 3 点：必须带 Unpowered（与灼伤 Burn 的写法一致），
         // 否则卡面预览会把玩家的力量/虚弱算进来，显示成浮动值。
-        new DamageVar(3, ValueProp.Move | ValueProp.Unpowered)
+        new DamageVar(6, ValueProp.Move | ValueProp.Unpowered)
     ];
 
     protected override async Task OnPlay(PlayerChoiceContext choiceContext, CardPlay cardPlay)

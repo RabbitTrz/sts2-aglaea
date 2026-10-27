@@ -92,13 +92,30 @@ public sealed class TailorSwarmPower : AglaeaPower
             return amount;
         }
 
-        return DrainSequentially(tailors, amount, props);
+        return PlanDrain(tailors, amount, props);
     }
 
-    // 依次抵挡：血量最低的衣匠优先吸收，直至耗尽。
-    private decimal DrainSequentially(List<Creature> tailors, decimal amount, ValueProp props)
+    /// <summary>本次受击的衣匠分摊计划（伤害在 AfterDamageReceived 里实际扣除）。</summary>
+    private sealed class PendingDrain
+    {
+        public required Creature Tailor;
+
+        public decimal Amount;
+
+        public ValueProp Props;
+    }
+
+    private readonly List<PendingDrain> _pendingDrains = new();
+
+    /// <summary>
+    /// 只计算分摊、不扣血。真正的扣血延后到异步的 <see cref="AfterDamageReceived"/>：
+    /// 这样衣匠受到致命伤害时它仍然存活，可以名正言顺地当锻泪匠躯的 dealer
+    /// （原版 CreatureCmd.Damage 会跳过已死 dealer 的伤害）。
+    /// </summary>
+    private decimal PlanDrain(List<Creature> tailors, decimal amount, ValueProp props)
     {
         decimal remaining = amount;
+        _pendingDrains.Clear();
 
         foreach (var tailor in tailors.OrderBy(c => c.CurrentHp))
         {
@@ -108,15 +125,25 @@ public sealed class TailorSwarmPower : AglaeaPower
             }
 
             decimal absorbed = Math.Min(remaining, tailor.CurrentHp);
-            tailor.LoseHpInternal(absorbed, props);
+            if (absorbed <= 0m)
+            {
+                continue;
+            }
+
+            _pendingDrains.Add(new PendingDrain
+            {
+                Tailor = tailor,
+                Amount = absorbed,
+                Props = props,
+            });
             remaining -= absorbed;
         }
 
         return remaining;
     }
 
-    // 玩家受到伤害后，清理掉因抵挡而阵亡的衣匠（正常播死亡动画并移出战斗），
-    // 并为每个阵亡的衣匠往玩家抽牌堆放一张若虫。
+    // 玩家受到伤害后：结算衣匠代伤（致命的那一下先触发锻泪匠躯，衣匠此时还活着），
+    // 然后清理阵亡衣匠（正常播死亡动画并移出战斗），并为每个阵亡衣匠往抽牌堆放若虫。
     public override async Task AfterDamageReceived(
         PlayerChoiceContext choiceContext, Creature target, DamageResult result,
         ValueProp props, Creature? dealer, CardModel? cardSource)
@@ -131,7 +158,29 @@ public sealed class TailorSwarmPower : AglaeaPower
             return;
         }
 
-        // 统一走 TailorCmd 的清理：衣匠攻击掉血致死（v0.1.3）走的是同一套收尾。
-        await TailorCmd.CleanupDeadTailors(choiceContext, Owner.Player, cardSource);
+        var drains = new List<PendingDrain>(_pendingDrains);
+        _pendingDrains.Clear();
+
+        foreach (var drain in drains)
+        {
+            if (!drain.Tailor.IsAlive)
+            {
+                continue;
+            }
+
+            // 这一下会把它打死：在扣血之前触发锻泪匠躯（dealer 用这名衣匠）。
+            if (drain.Amount >= drain.Tailor.CurrentHp)
+            {
+                await ForgedTearBodyPower.TriggerFromTailor(choiceContext, Owner.Player, drain.Tailor);
+            }
+
+            drain.Tailor.LoseHpInternal(drain.Amount, drain.Props);
+        }
+
+        if (drains.Count > 0)
+        {
+            // 统一走 TailorCmd 的清理：衣匠攻击掉血致死（v0.1.3）走的是同一套收尾。
+            await TailorCmd.CleanupDeadTailors(choiceContext, Owner.Player, cardSource);
+        }
     }
 }

@@ -25,7 +25,7 @@ namespace MoeNegiMod.Aglaea.Powers;
 public sealed class FormFormulaPower : AglaeaPower
 {
     /// <summary>每层提高的受伤倍率。</summary>
-    private const decimal IncreasePerStack = 0.5m;
+    private const decimal IncreasePerStack = 0.25m;
 
     public override PowerType Type => PowerType.Debuff;
 
@@ -65,7 +65,7 @@ public sealed class FormFormulaPower : AglaeaPower
         DynamicVars["DamageIncrease"].BaseValue = 1m + IncreasePerStack * Amount;
     }
 
-    /// <summary>受到的所有伤害 ×(1 + 0.5 × 层数)。</summary>
+    /// <summary>受到的所有伤害 ×(1 + 0.25 × 层数)。</summary>
     public override decimal ModifyDamageMultiplicative(
         Creature? target,
         decimal amount,

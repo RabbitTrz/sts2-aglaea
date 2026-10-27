@@ -37,6 +37,9 @@ public sealed class SpinGuardPower : AglaeaPower, ITailorAttackListener
         {
             return;
         }
-        await CreatureCmd.GainBlock(Owner, Amount, ValueProp.Move, null);
+
+        // 能力给的格挡不吃敏捷：与原版 After Image 一致用 Unpowered
+        // （ValueProp.Move 会走进敏捷的 IsPoweredCardOrMonsterMoveBlock 分支）。
+        await CreatureCmd.GainBlock(Owner, Amount, ValueProp.Unpowered, null, fast: true);
     }
 }

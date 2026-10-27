@@ -9,17 +9,20 @@ namespace MoeNegiMod.Aglaea.Relics;
 /// <summary>
 /// 阿格莱雅专属遗物的公共基类（反重力皮靴 / 火力风暴潮 / 光速螺旋桨）。
 ///
-/// 共同点只有「不进遗物池」：<see cref="Rarity"/> = None + <see cref="IsAllowedInShops"/> = false，
-/// 只能由「火种」累计满 12 层时发放。
+/// 稀有度标为 <see cref="RelicRarity.Event"/>：
+///   · 会出现在图鉴的「事件」分类里（需要加入遗物池，见 AglaeaRelicPool）；
+///   · 原版随机遗物奖励只抽 Common/Uncommon/Rare，Event 不会被随机掉落；
+///   · <see cref="IsAllowedInShops"/> = false，商店也不会出售。
+/// 实际只能由「火种」累计满 12 层时发放。
 ///
 /// v0.1.3 之前三个遗物共用「每打出 5 张攻击牌触发一次」的机制，现已各自重做，
 /// 因此基类不再提供计数器，各子类自己实现所需的钩子。
 /// </summary>
 public abstract class AglaeaExclusiveRelic : AglaeaRelics
 {
-    public override RelicRarity Rarity => RelicRarity.None;
+    public override RelicRarity Rarity => RelicRarity.Event;
 
-    // 不走商店/掉落池。
+    // 不走商店。
     public override bool IsAllowedInShops => false;
 }
 

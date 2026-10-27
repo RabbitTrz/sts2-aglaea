@@ -1,0 +1,14 @@
+{
+  "MOENEGIMOD-AGLAEA_RIPPLE_EVENT.title": "往昔的涟漪",
+  "MOENEGIMOD-AGLAEA_RIPPLE_EVENT.pages.INITIAL.description": "你睁开眼，发现自己正置身于[gold]金黄色的麦浪[/gold]中。微风滑过你的脸庞，远方的村落炊烟袅袅，天空中不见太阳，却总是散发着明亮的柔光。\n[pink]「嗨，没想到你也在这里呀。」[/pink]熟悉的声音从背后传来。你转过身，发现了[pink]那位少女[/pink]——她的衣角与袖口上沾着麦粒，看来之前正躺在地里睡觉。\n[pink]「啊，事先说好，我可没偷懒哦，只是来这里采采风。你看，这是我用麦穗编的头环，送给你啦。」[/pink]",
+  "MOENEGIMOD-AGLAEA_RIPPLE_EVENT.pages.INITIAL.options.ACCEPT.title": "谢谢你，我收下了",
+  "MOENEGIMOD-AGLAEA_RIPPLE_EVENT.pages.INITIAL.options.ACCEPT.description": "回复全部生命值。",
+  "MOENEGIMOD-AGLAEA_RIPPLE_EVENT.pages.STORY.description": "[pink]「嘻嘻，不用谢啦，喜欢就好。我们一起经历了那么多故事，就当是小小的纪念礼物吧。」[/pink]\n[pink]「说到故事……」[/pink]少女变出[blue]一本似曾相识的厚书[/blue]，书页被风翻动，发出沙沙的声音。\n[pink]「今天，你想听什么样的故事呢？」[/pink]",
+  "MOENEGIMOD-AGLAEA_RIPPLE_EVENT.pages.STORY.options.ADVENTURE.title": "激动人心的冒险故事",
+  "MOENEGIMOD-AGLAEA_RIPPLE_EVENT.pages.STORY.options.ADVENTURE.description": "获得2次稀有卡牌奖励。",
+  "MOENEGIMOD-AGLAEA_RIPPLE_EVENT.pages.STORY.options.FABLE.title": "神话色彩的寓言故事",
+  "MOENEGIMOD-AGLAEA_RIPPLE_EVENT.pages.STORY.options.FABLE.description": "获得1个稀有遗物奖励。",
+  "MOENEGIMOD-AGLAEA_RIPPLE_EVENT.pages.STORY.options.REUNION.title": "完满幸福的团圆故事",
+  "MOENEGIMOD-AGLAEA_RIPPLE_EVENT.pages.STORY.options.REUNION.description": "获得24点最大生命值。",
+  "MOENEGIMOD-AGLAEA_RIPPLE_EVENT.pages.END.description": "[pink]「……就这样，故事结束了。死去的英雄们从冥界归返，受损的村庄也得以修复。大家手拉着手，围在篝火前唱歌跳舞，直至暮色尽头……」[/pink]\n[pink]「怎么样，是不是很棒？我最喜欢它的尾声，带有一抹小小的奇幻色彩。」[/pink]少女合上书本，英雄、史诗，都变作其中永恒的一页。\n[pink]「那么，期待下次再会啦。相信我们也会迎来一个浪漫的结局。」[/pink]"
+}

@@ -1,3 +1,4 @@
+using MegaCrit.Sts2.Core.Combat;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Players;
@@ -21,6 +22,11 @@ public class AglaeaLightSpeedPropeller : AglaeaExclusiveRelic
 
     private int _drawCount;
 
+    /// <summary>遗物图标上显示当前累计的抽牌数（0~9）。</summary>
+    public override bool ShowCounter => CombatManager.Instance.IsInProgress;
+
+    public override int DisplayAmount => _drawCount;
+
     public override async Task AfterCardDrawn(
         PlayerChoiceContext choiceContext, CardModel card, bool fromHandDraw)
     {
@@ -33,10 +39,12 @@ public class AglaeaLightSpeedPropeller : AglaeaExclusiveRelic
         _drawCount++;
         if (_drawCount < CardsPerTrigger)
         {
+            InvokeDisplayAmountChanged();
             return;
         }
 
         _drawCount = 0;
+        InvokeDisplayAmountChanged();
         await PowerCmd.Apply<StrengthPower>(
             choiceContext, Owner.Creature, 1, Owner.Creature, null);
     }
@@ -45,6 +53,7 @@ public class AglaeaLightSpeedPropeller : AglaeaExclusiveRelic
     public override Task BeforeCombatStart()
     {
         _drawCount = 0;
+        InvokeDisplayAmountChanged();
         return Task.CompletedTask;
     }
 }

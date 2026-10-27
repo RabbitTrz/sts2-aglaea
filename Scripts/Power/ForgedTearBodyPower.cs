@@ -14,14 +14,16 @@ using System.Threading.Tasks;
 namespace MoeNegiMod.Aglaea.Powers;
 
 /// <summary>
-/// 锻泪匠躯（玩家身上的 Buff，v0.1.3 重做）：**自己的衣匠**死亡时，对所有敌人造成 Amount 点伤害。
+/// 锻泪匠躯（玩家身上的 Buff，v0.1.3 重做）：
+/// **自己的衣匠受到致命伤害时**（伤害尚未扣除，衣匠仍存活），对所有敌人造成 Amount 点伤害。
 ///
 /// 该伤害【视为衣匠攻击】：
 ///   · 伤害值吃「金丝」加成（走 TailorCmd.GetTailorDamage）
-///   · dealer 用死去的衣匠 → 「间隙织线」会按衣匠攻击计数
+///   · dealer 用这名即将死去的衣匠 → 「间隙织线」会按衣匠攻击计数
 ///
-/// v0.1.3 之前它的效果是「衣匠代伤时由所有衣匠均摊」，已整体替换
-/// （TailorSwarmPower 里对应的均摊分支同时移除）。
+/// 触发点放在「扣血之前」而不是 AfterDeath：原版 <c>CreatureCmd.Damage</c> 在
+/// <c>dealer.IsDead</c> 时会直接跳过伤害，死后触发就只能拿一个死掉的 dealer，
+/// 伤害会被静默吞掉。
 /// </summary>
 public sealed class ForgedTearBodyPower : AglaeaPower
 {
@@ -35,34 +37,24 @@ public sealed class ForgedTearBodyPower : AglaeaPower
     // 可疊：每打出一张，伤害叠高（卡面数值即 Amount）。
     public override PowerStackType StackType => PowerStackType.Counter;
 
-    public override async Task AfterDeath(
-        PlayerChoiceContext choiceContext, Creature creature, bool wasRemovalPrevented, float deathAnimLength)
+    /// <summary>
+    /// 在衣匠即将受到致命伤害时调用（伤害尚未扣除，衣匠仍存活），dealer 用这名衣匠。
+    /// </summary>
+    public static async Task TriggerFromTailor(
+        PlayerChoiceContext choiceContext, Player player, Creature tailor)
     {
-        if (wasRemovalPrevented)
+        var power = player.Creature.GetPower<ForgedTearBodyPower>();
+        var combat = player.Creature.CombatState;
+        if (power == null || power.Amount <= 0 || combat == null)
         {
             return;
         }
 
-        // 只响应自己的衣匠死亡。
-        if (creature.Monster is not AglaeaTailorMonster || creature.PetOwner != Owner.Player)
-        {
-            return;
-        }
-
-        Player? player = Owner.Player;
-        var combat = Owner.CombatState;
-        if (player == null || combat == null || Amount <= 0)
-        {
-            return;
-        }
-
-        // 视为衣匠攻击：吃金丝加成；dealer 用死去的衣匠，间隙织线据此计数。
-        // 不走「攻击扣血」（衣匠已经死了）。
-        int damage = TailorCmd.GetTailorDamage(player, Amount);
+        int damage = TailorCmd.GetTailorDamage(player, power.Amount);
         foreach (var enemy in combat.Enemies.Where(e => e.IsAlive).ToList())
         {
             await CreatureCmd.Damage(
-                choiceContext, enemy, damage, ValueProp.Move | ValueProp.Unpowered, creature);
+                choiceContext, enemy, damage, ValueProp.Move | ValueProp.Unpowered, tailor, null, null);
         }
     }
 }

@@ -24,13 +24,18 @@ namespace MoeNegiMod.Aglaea.Powers;
 /// 单人单 Aglaea 时为 2。
 ///
 /// 计数为全场共享：此 debuff 全场同时只存在于一名敌人身上。
-/// 计数在回合结束时清零（力量损失本身由 TemporaryStrength 在回合结束清除）。
+/// v0.1.4 规则：计数**跨回合保留**（回合开始不清零）；
+/// 对同一目标**重复施加**时，视为额外累计 1 次衣匠攻击。
 ///
-/// Amount 语义 = 本回合已受到的衣匠攻击次数；图标数字由 <see cref="DisplayAmount"/>
-/// 反向显示为「还差几次」。
+/// Amount 的编码：Amount = 已累计攻击次数 + 1（至少为 1）。
+/// 之所以不直接用 0 表示 0 次，是因为 Counter 型 power 的 Amount 归零会被原版自动移除。
+/// 图标数字由 <see cref="DisplayAmount"/> 反向显示为「还差几次」。
 /// </summary>
 public sealed class WeaveLinePower : AglaeaPower
 {
+    /// <summary>首次施加时用来吞掉 Apply 触发的 AfterPowerAmountChanged（首次不计数）。</summary>
+    private bool _justApplied;
+
     public override PowerType Type => PowerType.Debuff;
 
     // 必须为 Counter，NPower 才会渲染图标上的数字（见 NCard/NPower 的 DisplayAmount 逻辑）。
@@ -42,17 +47,6 @@ public sealed class WeaveLinePower : AglaeaPower
         HoverTipFactory.FromPower<MonarchsGazeStrengthDownPower>(),
         HoverTipFactory.FromPower<TailorSwarmPower>()
     ];
-
-    private sealed class Data
-    {
-        // 本回合已受到的衣匠攻击次数。与 Amount 保持同步，便于在 hook 中读写。
-        public int HitsThisTurn;
-    }
-
-    protected override object InitInternalData()
-    {
-        return new Data();
-    }
 
     /// <summary>
     /// 触发力量下降所需的衣匠攻击次数。
@@ -68,7 +62,7 @@ public sealed class WeaveLinePower : AglaeaPower
                 return 2;
             }
 
-            // 绞紧（v0.1.3）：本回合触发力量下降所需的攻击次数降为 1。
+            // 绞紧：本回合触发力量下降所需的攻击次数降为 1。
             // 由「绞紧」技能牌挂 TwistTightPower 标记，作用对象是整条间隙织线（全场唯一）。
             if (combat.Players.Any(p => p.Creature.GetPower<TwistTightPower>() != null))
             {
@@ -83,13 +77,13 @@ public sealed class WeaveLinePower : AglaeaPower
     }
 
     /// <summary>图标显示「还差几次衣匠攻击触发力量下降」。</summary>
-    public override int DisplayAmount => System.Math.Max(0, HitsRequired - Amount);
+    public override int DisplayAmount => System.Math.Max(0, HitsRequired + 1 - Amount);
 
-    /// <summary>首次挂载时把计数归零（Apply 传入的 amount 仅用于让 power 存在，不参与计数）。</summary>
+    /// <summary>首次挂载：Amount = 1（0 次累计）。Apply 传入的层数不参与计数。</summary>
     public override Task AfterApplied(Creature? applier, CardModel? cardSource)
     {
-        SetAmount(0);
-        GetInternalData<Data>().HitsThisTurn = 0;
+        _justApplied = true;
+        SetAmount(1);
         return Task.CompletedTask;
     }
 
@@ -115,6 +109,40 @@ public sealed class WeaveLinePower : AglaeaPower
         }
 
         return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// 重复施加：视为额外累计 1 次衣匠攻击。
+    /// PowerCmd.ModifyAmount 已经把施加层数加进 Amount，这里先把编码修正回「+1 次」，
+    /// 再走统一的阈值结算。
+    /// </summary>
+    public override async Task AfterPowerAmountChanged(
+        PlayerChoiceContext choiceContext,
+        PowerModel power,
+        decimal amount,
+        Creature? applier,
+        CardModel? cardSource)
+    {
+        if (power != this || amount <= 0)
+        {
+            return;
+        }
+
+        // 首次施加时 Apply 也会触发一次本 hook；那一次不算累计。
+        if (_justApplied)
+        {
+            _justApplied = false;
+            return;
+        }
+
+        int applied = (int)amount;
+        if (applied != 1)
+        {
+            // 规则是「每次重复施加只算 1 次」，不按施加层数计算。
+            SetAmount(Amount - applied + 1);
+        }
+
+        await CheckThreshold(choiceContext, applier, cardSource);
     }
 
     // 只统计来自衣匠的攻击；每累计 N 次使其本回合失去 1 点力量并归零。
@@ -149,28 +177,31 @@ public sealed class WeaveLinePower : AglaeaPower
             }
         }
 
-        var data = GetInternalData<Data>();
-        data.HitsThisTurn++;
+        // Amount = 次数 + 1，所以一次攻击把 Amount +1 即可。
+        SetAmount(Amount + 1);
+        await CheckThreshold(choiceContext, dealer, cardSource);
+    }
 
-        int required = HitsRequired;
-        if (data.HitsThisTurn < required)
-        {
-            SetAmount(data.HitsThisTurn);
-            return;
-        }
-
-        // 达成阈值：归零后施加力量下降。
-        data.HitsThisTurn = 0;
-        SetAmount(0);
-
-        var player = Owner.CombatState?.Players.FirstOrDefault();
-        if (player == null)
+    /// <summary>
+    /// Amount - 1 = 已累计次数。达到阈值时归零（Amount 回到 1）并结算力量变化。
+    /// 注意 Amount 不能设成 0：Counter 型 power 归零会被原版移除。
+    /// </summary>
+    private async Task CheckThreshold(
+        PlayerChoiceContext choiceContext, Creature? dealer, CardModel? cardSource)
+    {
+        if (Amount - 1 < HitsRequired)
         {
             return;
         }
+
+        SetAmount(1);
+
+        // 脆若游丝要按【攻击者的主人】判断，而不是固定取 Players[0]：
+        // 多人下衣匠可能属于任何一个玩家，用 1 号玩家的状态会判断错人。
+        var attackerOwner = dealer?.PetOwner ?? dealer?.Player;
 
         // 脆若游丝：力量降低改为力量提升。
-        if (player.Creature.GetPower<GossamerPower>() != null)
+        if (attackerOwner != null && attackerOwner.Creature.GetPower<GossamerPower>() != null)
         {
             await PowerCmd.Apply<FlexPotionPower>(
                 choiceContext, Owner, 1, dealer, cardSource, false);
@@ -180,17 +211,5 @@ public sealed class WeaveLinePower : AglaeaPower
         // 绞紧只改写触发门槛（见 HitsRequired），力量下降本身固定 1 点。
         await PowerCmd.Apply<MonarchsGazeStrengthDownPower>(
             choiceContext, Owner, 1, dealer, cardSource, false);
-    }
-
-    // 回合结束重置计数（力量损失本身由 TemporaryStrengthPower 在回合结束清除）。
-    public override Task AfterSideTurnEnd(
-        PlayerChoiceContext choiceContext,
-        CombatSide side,
-        IEnumerable<Creature> creatures)
-    {
-        var data = GetInternalData<Data>();
-        data.HitsThisTurn = 0;
-        SetAmount(0);
-        return Task.CompletedTask;
     }
 }

@@ -1,7 +1,9 @@
 using BaseLib.Abstracts;
 using MegaCrit.Sts2.Core.Commands;
+using MegaCrit.Sts2.Core.Entities.Ascension;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.MonsterMoves.Intents;
 using MegaCrit.Sts2.Core.MonsterMoves.MonsterMoveStateMachine;
 using MoeNegiMod.Aglaea.Character;
@@ -20,12 +22,16 @@ namespace MoeNegiMod.Aglaea.Monsters;
 /// </summary>
 public sealed class AglaeaTideAxe : CustomMonsterModel
 {
-    /// <summary>【怒潮】伤害（v0.1.4 单人数值；进阶 8/9 版本暂不做）。</summary>
-    private const int SurgeDamage = 10;
+    /// <summary>【怒潮】伤害（进阶 9 提升 1 点）。</summary>
+    private static int SurgeDamage =>
+        AscensionHelper.GetValueIfAscension(AscensionLevel.DeadlyEnemies, 11, 10);
 
-    public override int MinInitialHp => 25;
+    // 进阶 8：生命值 +5。
+    public override int MinInitialHp =>
+        AscensionHelper.GetValueIfAscension(AscensionLevel.ToughEnemies, 30, 25);
 
-    public override int MaxInitialHp => 25;
+    public override int MaxInitialHp =>
+        AscensionHelper.GetValueIfAscension(AscensionLevel.ToughEnemies, 30, 25);
 
     public override async Task AfterAddedToRoom()
     {

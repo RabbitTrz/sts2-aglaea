@@ -16,6 +16,9 @@ tools/installer/payload/
 # 发出去的压缩包与解压目录（每个 ~100-200 MB，不入库）
 *.zip
 tools/installer/AglaeaInstaller_Aglaea_*/
+# 发布/创意工坊临时工作区（内含 pck/dll 等打包产物）
+tools/release/
+tools/workshop/
 *.user
 .vs/
 

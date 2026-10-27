@@ -36,10 +36,21 @@ public sealed class AglaeaZandarBoss : CustomEncounterModel
     public override string? CustomScenePath => "res://Aglaea/scene/Encounters/zandar_boss.tscn";
 
     /// <summary>Boss 地图节点图标（PNG + _outline.png，352×300，放 mod 自己的目录）。</summary>
-    public override string BossNodePath => "res://Aglaea/images/map/zandar_icon";
+    public override string BossNodePath => "res://Aglaea/images/map/zandar_map";
 
     /// <summary>没有 Spine 资源 —— 走 PNG 分支（同原版几个用 placeholder 图标的 Boss）。</summary>
     public override MegaSkeletonDataResource? BossNodeSpineResource => null;
+
+    /// <summary>
+    /// 战斗历史里的遭遇战图标。BaseLib 默认去找
+    /// <c>res://images/ui/run_history/&lt;id&gt;.png</c>（mod 里没有这个文件，会刷一堆加载错误），
+    /// 直接复用地图上的 Boss 图标。
+    /// </summary>
+    public override string CustomRunHistoryIconPath
+        => "res://Aglaea/images/ui/run_history/zandar_icon.png";
+
+    public override string CustomRunHistoryIconOutlinePath
+        => "res://Aglaea/images/ui/run_history/zandar_icon_outline.png";
 
     /// <summary>
     /// 自定义 BGM：返回哨兵字符串，由 <see cref="Audio.ZandarBossMusic"/> 的补丁接管 ——

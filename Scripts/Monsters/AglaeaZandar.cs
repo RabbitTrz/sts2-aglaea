@@ -2,10 +2,12 @@ using BaseLib.Abstracts;
 using BaseLib.Extensions;
 using MegaCrit.Sts2.Core.Commands;
 using MegaCrit.Sts2.Core.Combat;
+using MegaCrit.Sts2.Core.Entities.Ascension;
 using MegaCrit.Sts2.Core.Entities.Cards;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.Entities.Powers;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
+using MegaCrit.Sts2.Core.Helpers;
 using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.Models.Characters;
 using MegaCrit.Sts2.Core.Models.Powers;
@@ -39,7 +41,8 @@ namespace MoeNegiMod.Aglaea.Monsters;
 /// 两个形态的计数都是带图标、可悬停查看的 power（演化形态 / 论证形态），
 /// 用倒数表现「还差几次」；减到 0 时 power 消失，行动意图随即变化。
 ///
-/// 所有数值均为 v0.1.4 单人数值（多人平衡与进阶 8/9 版本留待后续，见设计备注）。
+/// 数值为单人数值；进阶 8（ToughEnemies）提升生命，进阶 9（DeadlyEnemies）提升招式伤害
+/// 并让每次行动多塞 1 张二律背反。多人平衡留待后续。
 /// </summary>
 public sealed class AglaeaZandar : CustomMonsterModel
 {
@@ -86,17 +89,36 @@ public sealed class AglaeaZandar : CustomMonsterModel
 
     private MoveState? _solveMove;
 
-    private const int OrbitDamage = 15;          // 天球偏移论
-    private const int GeometryDamage = 8;        // 虚数几何演绎法（单次）
+    // 进阶 9（DeadlyEnemies）：各招式伤害提升。
+    private static int OrbitDamage =>
+        AscensionHelper.GetValueIfAscension(AscensionLevel.DeadlyEnemies, 17, 15);   // 天球偏移论
+
+    private static int GeometryDamage =>
+        AscensionHelper.GetValueIfAscension(AscensionLevel.DeadlyEnemies, 9, 8);     // 虚数几何演绎法（单次）
+
     private const int GeometryHits = 3;
-    private const int DelDamage = 10;            // DEL 入侵变量
-    private const int FormatDamage = 4;          // FORMAT 故障空间（单次）
+
+    private static int DelDamage =>
+        AscensionHelper.GetValueIfAscension(AscensionLevel.DeadlyEnemies, 12, 10);   // DEL 入侵变量
+
+    private static int FormatDamage =>
+        AscensionHelper.GetValueIfAscension(AscensionLevel.DeadlyEnemies, 5, 4);     // FORMAT 故障空间（单次）
+
     private const int FormatHits = 3;
-    private const int SolveDamage = 39;          // 求解：第一因之果
 
-    public override int MinInitialHp => 1000;
+    private static int SolveDamage =>
+        AscensionHelper.GetValueIfAscension(AscensionLevel.DeadlyEnemies, 42, 39);   // 求解：第一因之果
 
-    public override int MaxInitialHp => 1000;
+    /// <summary>进阶 9：每次行动向所有玩家手牌放入的二律背反数量（1 → 2）。</summary>
+    private static int AntinomyPerAction =>
+        AscensionHelper.GetValueIfAscension(AscensionLevel.DeadlyEnemies, 2, 1);
+
+    // 进阶 8（ToughEnemies）：生命值 1000 → 1024。
+    public override int MinInitialHp =>
+        AscensionHelper.GetValueIfAscension(AscensionLevel.ToughEnemies, 1024, 1000);
+
+    public override int MaxInitialHp =>
+        AscensionHelper.GetValueIfAscension(AscensionLevel.ToughEnemies, 1024, 1000);
 
     public override async Task AfterAddedToRoom()
     {
@@ -207,8 +229,12 @@ public sealed class AglaeaZandar : CustomMonsterModel
             "GEOMETRY_MOVE", GeometryMove, new MultiAttackIntent(GeometryDamage, GeometryHits), new StatusIntent(1));
         // 【潜能实现猜想】：本该再召唤、但场上小怪已经够多（≥3）时改放这招，
         // 使除自己以外的所有敌人 +8 力量（强化+卡牌污染）。
-        MoveState potential = new MoveState(
+        // 它在循环里替代两个不同的公理节点，后续也不同（虚数 / 天球），
+        // 所以必须拆成两个状态节点——否则 MoveState 的 FollowUp 为空会直接抛异常。
+        MoveState potentialAfterOrbit = new MoveState(
             "POTENTIAL_MOVE", PotentialMove, new BuffIntent(), new StatusIntent(1));
+        MoveState potentialAfterGeometry = new MoveState(
+            "POTENTIAL_MOVE_2", PotentialMove, new BuffIntent(), new StatusIntent(1));
         // SET / 求解是形态终结技：一旦被选中（或被强制切过来）必须先打出来，
         // 不能被下一次掷招顶掉（见 ForceNextMove）。
         MoveState set = new MoveState(
@@ -236,8 +262,8 @@ public sealed class AglaeaZandar : CustomMonsterModel
         // （结构参考原版组装师：能召唤才做召唤动作，否则走替代招式）。
         ConditionalBranchState afterAxiom1 = Branch("AFTER_AXIOM_1", set, orbit, EvolutionCompleted);
         ConditionalBranchState afterAxiom2 = Branch("AFTER_AXIOM_2", set, geometry, EvolutionCompleted);
-        ConditionalBranchState afterOrbit = SummonOrPotential("AFTER_ORBIT", set, axiom2, potential);
-        ConditionalBranchState afterGeometry = SummonOrPotential("AFTER_GEOMETRY", set, axiom1, potential);
+        ConditionalBranchState afterOrbit = SummonOrPotential("AFTER_ORBIT", set, axiom2, potentialAfterOrbit);
+        ConditionalBranchState afterGeometry = SummonOrPotential("AFTER_GEOMETRY", set, axiom1, potentialAfterGeometry);
         ConditionalBranchState afterDel = Branch("AFTER_DEL", solve, format, ArgumentCompleted);
         ConditionalBranchState afterFormat = Branch("AFTER_FORMAT", solve, del, ArgumentCompleted);
 
@@ -245,6 +271,8 @@ public sealed class AglaeaZandar : CustomMonsterModel
         orbit.FollowUpState = afterOrbit;
         axiom2.FollowUpState = afterAxiom2;
         geometry.FollowUpState = afterGeometry;
+        potentialAfterOrbit.FollowUpState = geometry;      // 替代公理2 → 接虚数
+        potentialAfterGeometry.FollowUpState = orbit;      // 替代公理1 → 接天球
         set.FollowUpState = del;        // SET 后进入论证形态
         del.FollowUpState = afterDel;
         format.FollowUpState = afterFormat;
@@ -252,7 +280,7 @@ public sealed class AglaeaZandar : CustomMonsterModel
 
         List<MonsterState> states = new()
         {
-            axiom1, orbit, axiom2, geometry, potential, set,
+            axiom1, orbit, axiom2, geometry, potentialAfterOrbit, potentialAfterGeometry, set,
             del, format, solve,
             afterAxiom1, afterOrbit, afterAxiom2, afterGeometry, afterDel, afterFormat,
         };
@@ -516,7 +544,10 @@ public sealed class AglaeaZandar : CustomMonsterModel
         await PolluteHands();
     }
 
-    /// <summary>【智识的二律背反】：赞达尔每次行动时，向所有玩家手中放入 1 张二律背反。</summary>
+    /// <summary>
+    /// 【智识的二律背反】：赞达尔每次行动时，向所有玩家手中放入二律背反
+    /// （普通 1 张；进阶 9 起 2 张）。
+    /// </summary>
     private async Task PolluteHands()
     {
         List<Creature> players = AlivePlayers();
@@ -526,7 +557,8 @@ public sealed class AglaeaZandar : CustomMonsterModel
         }
 
         // 塞牌逻辑与原版【实验体】塞灼烧一致。
-        await CardPileCmd.AddToCombatAndPreview<AglaeaAntinomy>(players, PileType.Hand, 1, null);
+        await CardPileCmd.AddToCombatAndPreview<AglaeaAntinomy>(
+            players, PileType.Hand, AntinomyPerAction, null);
     }
 
     /// <summary>
@@ -614,10 +646,10 @@ public sealed class AglaeaZandar : CustomMonsterModel
             .ToList() ?? new List<Creature>();
     }
 
-    /// <summary>秘所思公理的第二次出现与第一次是同一个招式，图鉴里只显示一条。</summary>
+    /// <summary>重复出现的招式节点（第二次公理 / 第二次潜能）图鉴里只显示一条。</summary>
     protected override bool ShouldShowMoveInBestiary(string moveStateId)
     {
-        return moveStateId != "AXIOM_MOVE_2";
+        return moveStateId != "AXIOM_MOVE_2" && moveStateId != "POTENTIAL_MOVE_2";
     }
 
     protected override string VisualsPath => AglaeaVisuals.ZandarScenePath;

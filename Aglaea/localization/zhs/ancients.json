@@ -1,6 +1,8 @@
 {
-  "THE_ARCHITECT.talk.MOENEGIMOD-AGLAEA.0-0r.char": "I am angry at the architect",
-  "THE_ARCHITECT.talk.MOENEGIMOD-AGLAEA.0-0r.next": "Continue",
-  "THE_ARCHITECT.talk.MOENEGIMOD-AGLAEA.0-1r.ancient": "You die",
+  "THE_ARCHITECT.talk.MOENEGIMOD-AGLAEA.0-0r.char": "杀戮便是你们这里的礼数吗？",
+  "THE_ARCHITECT.talk.MOENEGIMOD-AGLAEA.0-0r.next": "继续",
+  "THE_ARCHITECT.talk.MOENEGIMOD-AGLAEA.0-1r.ancient": "回去吧逐火者，这里没有你想要的。",
+  "THE_ARCHITECT.talk.MOENEGIMOD-AGLAEA.0-1r.next": "回答",
+  "THE_ARCHITECT.talk.MOENEGIMOD-AGLAEA.0-2r.char": "金线会告诉我实情。",
   "THE_ARCHITECT.talk.MOENEGIMOD-AGLAEA.0-attack": "Both"
 }
