@@ -1,6 +1,5 @@
 using HarmonyLib;
 using MegaCrit.Sts2.Core.Models;
-using MegaCrit.Sts2.Core.Models.Singleton;
 using MainFile = Aglaea.MainFile;
 
 namespace MoeNegiMod.Aglaea.Compat;
@@ -22,17 +21,16 @@ internal static class MultiplayerAct4ScalingPatch
     private const decimal Act4Multiplier = 1.3m;
 
     [HarmonyPrefix]
-    private static bool Prefix(int __1, ref decimal __result)
+    private static bool Prefix(int actIndex, ref decimal __result)
     {
-        // __1 = actIndex
-        if (__1 < 3)
+        if (actIndex < 3)
         {
             return true;
         }
 
         __result = Act4Multiplier;
         MainFile.Logger.Info(
-            $"[Aglaea] 多人第四章怪物缩放：actIndex={__1}，倍率 {Act4Multiplier}（原版会抛异常）。");
+            $"[Aglaea] 多人第四章怪物缩放：actIndex={actIndex}，倍率 {Act4Multiplier}（原版会抛异常）。");
         return false;
     }
 }

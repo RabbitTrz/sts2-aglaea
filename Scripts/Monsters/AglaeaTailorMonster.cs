@@ -20,7 +20,8 @@ public sealed class AglaeaTailorMonster : CustomMonsterModel
     public override int MinInitialHp => 5;
     public override int MaxInitialHp => 5;
 
-    public override bool IsHealthBarVisible => true;
+    // 生命条/血量显示：v0.113 起由 MonsterModel.IsInteractable（默认 true）取代旧的 IsHealthBarVisible。
+    // 衣匠保持默认 true 即可，不需要再覆盖。
 
     // 衣匠是宠物，不做任何主动移动（与 Osty 相同）。
     protected override MonsterMoveStateMachine GenerateMoveStateMachine()

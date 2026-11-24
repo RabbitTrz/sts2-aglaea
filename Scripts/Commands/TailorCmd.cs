@@ -84,14 +84,15 @@ public static class TailorCmd
             await CreatureCmd.GainMaxHp(tailor, maxHpBonus.Amount);
         }
 
-        // 显示所有衣匠的血条：普通宠物在 AddCreature 中会被强制 ToggleIsInteractable(false)
-        // 从而隐藏血条（只有内置 Osty 走特殊分支保留血条），且每次召唤新衣匠时，循环会
-        // 把该玩家旗下【所有】宠物都重新置为 false。因此这里要把所有衣匠的血条都重新打开。
+        // 显示所有衣匠的血条。v0.113 起 NCombatRoom 的 SetCreatureIsInteractable 已移除，
+        // 改为在 NCreature 节点上调用 SetIsInteractable(true, true)。
         foreach (var pet in player.PlayerCombatState.Pets)
         {
             if (pet.IsAlive && pet.Monster is AglaeaTailorMonster)
             {
-                NCombatRoom.Instance?.SetCreatureIsInteractable(pet, true);
+                NCombatRoom.Instance?.CreatureNodes
+                    .FirstOrDefault(n => n.Entity == pet)
+                    ?.SetIsInteractable(on: true, changeVisibilityImmediately: true);
             }
         }
 

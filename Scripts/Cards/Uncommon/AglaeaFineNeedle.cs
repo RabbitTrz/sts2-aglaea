@@ -4,6 +4,7 @@ using MegaCrit.Sts2.Core.HoverTips;
 using MegaCrit.Sts2.Core.Entities.Creatures;
 using MegaCrit.Sts2.Core.GameActions.Multiplayer;
 using MegaCrit.Sts2.Core.Localization.DynamicVars;
+using MegaCrit.Sts2.Core.Models;
 using MegaCrit.Sts2.Core.ValueProps;
 using MoeNegiMod.Aglaea.Monsters;
 using System.Collections.Generic;
@@ -38,7 +39,7 @@ public class AglaeaFineNeedle() : AglaeaCard(3,
 
     // 衣匠死亡时，此牌在本场战斗中永久降低 1 费。
     public override Task AfterDeath(
-        PlayerChoiceContext choiceContext, Creature creature, bool wasRemovalPrevented, float deathAnimLength)
+        PlayerChoiceContext choiceContext, Creature creature, CardModel? source, bool wasRemovalPrevented, float deathAnimLength)
     {
         if (wasRemovalPrevented)
         {

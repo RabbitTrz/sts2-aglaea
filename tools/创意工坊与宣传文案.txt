@@ -1,6 +1,6 @@
 ========================================
   Aglaea 模组：创意工坊简介 & B站宣传文案
-  当前版本：0.1.4-fix
+  当前版本：0.1.4-fix2
 ========================================
 
 
@@ -10,7 +10,7 @@
 
 【阿格莱雅（Aglaea）—《杀戮尖塔 2》角色 Mod】
 
-版本：0.1.4-fix ｜ 语言：简体中文 ｜ 模式：单人 / 多人合作
+版本：0.1.4-fix2 ｜ 语言：简体中文 ｜ 模式：单人 / 多人合作
 
 ◆ 简介
 《崩坏：星穹铁道》中的角色「阿格莱雅」作为可游玩的独立角色加入《杀戮尖塔2》。
@@ -32,7 +32,7 @@
 
 ◆ 前置与安装
 · 请将游戏更新至最新版beta分支。
-· 必需前置：BaseLib（≥ 3.4.7），请先订阅并启用。
+· 必需前置：BaseLib（≥ 3.4.8），请先订阅并启用。
 · 创意工坊安装：订阅 BaseLib 与本模组，启用后重启游戏。
 · 手动安装：将 Aglaea.pck、Aglaea.dll、Aglaea.json 放入 <游戏目录>\mods\Aglaea\。
 · 安装前建议备份存档。
@@ -186,7 +186,7 @@ Boss「赞达尔」
 
 屏幕字卡：
 Steam 创意工坊搜索：Aglaea 阿格莱雅
-必需前置：BaseLib ≥ 3.4.7
+必需前置：BaseLib ≥ 3.4.8
 问题反馈：创意工坊留言 / GitHub Issues
 
 结束卡（小字）：
@@ -202,7 +202,7 @@ BGM 版权归原权利人所有。
 98 张卡牌、40+ 种能力、7 个遗物；召唤衣匠、金丝、至高之姿与间隙织线。
 新增第四幕「创世涡心」与新 Boss「赞达尔」，支持单人与多人合作。
 Steam 创意工坊搜索「Aglaea 阿格莱雅」。
-必需前置：BaseLib ≥ 3.4.7。
+必需前置：BaseLib ≥ 3.4.8。
 问题反馈：创意工坊留言 / https://github.com/RabbitTrz/sts2-aglaea/issues
 
 【标签】
@@ -226,9 +226,9 @@ Steam 创意工坊搜索「Aglaea 阿格莱雅」。
    如需对外保守表述，可改为「90+ 张卡牌」。
 
 3. 创意工坊上传
-   - 把 BaseLib 设为必需前置（模组清单已声明依赖 BaseLib ≥3.4.7）。
-   - 上传前确认 Aglaea.json 的 version = 0.1.4-fix。
-   - 安装包：tools/installer/AglaeaInstaller_Aglaea_v0.1.4-fix.zip
+   - 把 BaseLib 设为必需前置（模组清单已声明依赖 BaseLib ≥3.4.8）。
+   - 上传前确认 Aglaea.json 的 version = 0.1.4-fix2。
+   - 安装包：tools/installer/AglaeaInstaller_Aglaea_v0.1.4-fix2.zip
    - 压缩包与 pck/exe 已被 .gitignore 排除，不会进仓库。
 
 4. 视频素材

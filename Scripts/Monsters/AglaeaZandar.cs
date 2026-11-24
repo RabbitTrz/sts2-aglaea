@@ -167,7 +167,7 @@ public sealed class AglaeaZandar : CustomMonsterModel
     /// 论证形态的倒数 -1；减到 0 时该 power 自动消失，行动状态机的分支随即改放求解。
     /// </summary>
     public override async Task AfterDeath(
-        PlayerChoiceContext choiceContext, Creature creature, bool wasRemovalPrevented, float deathAnimLength)
+        PlayerChoiceContext choiceContext, Creature creature, CardModel? source, bool wasRemovalPrevented, float deathAnimLength)
     {
         // 赞达尔倒下 = 这场 Boss 战结束：停掉自定义 BGM（游戏中还有兜底补丁）。
         if (creature == Creature)
